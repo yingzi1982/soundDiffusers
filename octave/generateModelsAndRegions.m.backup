@@ -1,0 +1,95 @@
+#!/usr/bin/env octave
+
+clear all
+close all
+clc
+
+%input = input('Please input heterogeneityType(true, false): ','s')
+%inputtext = textscan(input,'%s');
+%heterogeneityType  = inputtext{1}{1};
+heterogeneityType  = 'true';
+
+[nxStatus nx] = system('grep nx ../backup/Par_file_part | cut -d = -f 2');
+nx = str2num(nx);
+xi_number=nx;
+
+discreteSolidVP_min = 1000.0;
+discreteSolidVP_max = 10000.0;
+nbmodels = 1801;
+discreteSolidVP = transpose(linspace(discreteSolidVP_min,discreteSolidVP_max,nbmodels));
+discreteSolidVS = discreteSolidVP/sqrt(3);
+discreteSolidRHO = 1700.0+0.2*discreteSolidVP;
+discreteSolidQkappa = 9999.0*ones(nbmodels,1);
+discreteSolidQmu = 9999.0*ones(nbmodels,1);
+discreteSolidNumbering = transpose([1:nbmodels]);
+
+discreteSolidModel = [discreteSolidNumbering ones(nbmodels,1) discreteSolidRHO discreteSolidVP discreteSolidVS ...
+zeros(nbmodels,1) zeros(nbmodels,1) discreteSolidQkappa discreteSolidQmu ...
+zeros(nbmodels,1) zeros(nbmodels,1)  zeros(nbmodels,1) zeros(nbmodels,1) zeros(nbmodels,1) zeros(nbmodels,1)];
+models = discreteSolidModel;
+
+fileID = fopen(['../backup/models'],'w');
+fprintf(fileID, '\n')
+fprintf(fileID, '#------------------------------------------------------------\n')
+fprintf(fileID, 'nbmodels                        = %i\n',nbmodels)
+fprintf(fileID, '#------------------------------------------------------------\n')
+for nmodel = [1:nbmodels]
+  fprintf(fileID, '%i %i %f %f %f %i %i %i %i %i %i %i %i %i %i\n', ...
+ models(nmodel,1),  models(nmodel,2),  models(nmodel,3),  models(nmodel,4),  models(nmodel,5),...
+ models(nmodel,6),  models(nmodel,7),  models(nmodel,8),  models(nmodel,9),  models(nmodel,10),...
+ models(nmodel,11), models(nmodel,12), models(nmodel,13), models(nmodel,14), models(nmodel,15))
+end
+fprintf(fileID, '\n')
+fclose(fileID);
+
+NGLLX = 5;
+NGLLZ = NGLLX;
+spatial_sampling = load('../backup/model_velocity.dat_output_serial');
+spatial_sampling = [spatial_sampling(round((1+NGLLX*NGLLZ)/2):NGLLX*NGLLZ:end,2) spatial_sampling(round((1+NGLLX*NGLLZ)/2):NGLLX*NGLLZ:end,3)];
+nbregions = rows(spatial_sampling);
+regions = zeros(nbregions,5);
+layer_number = nbregions/xi_number;
+
+spatial_sampling_xi = spatial_sampling(:,1);
+spatial_sampling_gamma = spatial_sampling(:,2);
+
+random = load('../backup/random');
+random_xi = random(:,1);
+random_gamma = random(:,2);
+random_vs_perturbation = random(:,3);
+
+switch heterogeneityType 
+case 'true'
+  vs_heterogeneity = griddata(random_xi,random_gamma,random_vs_perturbation,spatial_sampling_xi,spatial_sampling_gamma,'linear');
+case 'false'
+  vs_heterogeneity = zeros(size(spatial_sampling_xi)); 
+otherwise
+  error('Wrong heterogeneityType!')
+end
+spatial_sampling_vs_heterogeneity = vs_heterogeneity;
+
+spatial_sampling_vs_background = 3000;
+
+spatial_sampling_vs = spatial_sampling_vs_background+spatial_sampling_vs_heterogeneity;
+
+[spatial_sampling_vs spatial_sampling_vs_index] = findNearest(discreteSolidVS, spatial_sampling_vs);
+regions(:,end) = discreteSolidNumbering(spatial_sampling_vs_index);
+
+for ilayer = [1:layer_number]
+  for ixi = [1:xi_number]
+    iregion = (ilayer-1)*xi_number + ixi;
+    regions(iregion,1:end-1) = [ixi ixi ilayer ilayer];
+  end
+end
+
+fileID = fopen(['../backup/regions'],'w');
+fprintf(fileID, '\n')
+fprintf(fileID, '#------------------------------------------------------------\n')
+fprintf(fileID, 'nbregions                        = %i\n',nbregions)
+fprintf(fileID, '#------------------------------------------------------------\n')
+for nregion = [1:nbregions]
+  fprintf(fileID, '%i %i %i %i %i\n', ...
+ regions(nregion,1), regions(nregion,2), regions(nregion,3), regions(nregion,4), regions(nregion,5))
+end       
+fprintf(fileID, '\n')
+fclose(fileID);

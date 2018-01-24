@@ -1,0 +1,8 @@
+# GMT 5 Session common arguments shelf
+BEGIN GMT 5.1.0
+B	xa1f0.5+lHorizontal offset (m) ya1f0.5+lVertical offset (m)
+J	X
+JX	X2.2i
+R	-2/2/-2/2
+L	3
+END

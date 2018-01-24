@@ -1,0 +1,387 @@
+#!/bin/bash
+source /usr/share/modules/init/bash
+module load apps gmt/intel/5.1.0
+
+rm gmt.conf
+rm gmt.history
+
+gmt gmtset MAP_FRAME_AXES WeSn
+gmt gmtset MAP_FRAME_TYPE plain
+gmt gmtset MAP_FRAME_PEN thick
+gmt gmtset MAP_TICK_PEN thick
+gmt gmtset MAP_TICK_LENGTH_PRIMARY -3p
+#gmt gmtset MAP_DEGREE_SYMBOL none
+#gmt gmtset MAP_GRID_CROSS_SIZE_PRIMARY 0.0i
+#gmt gmtset MAP_GRID_CROSS_SIZE_SECONDARY 0.0i
+#gmt gmtset MAP_GRID_PEN_PRIMARY thin,black
+#gmt gmtset MAP_GRID_PEN_SECONDARY thin,black
+gmt gmtset MAP_ORIGIN_X 100p
+gmt gmtset MAP_ORIGIN_Y 100p
+#gmt gmtset FORMAT_GEO_OUT +D
+gmt gmtset COLOR_NAN 255/255/255
+gmt gmtset COLOR_FOREGROUND 255/255/255
+gmt gmtset COLOR_BACKGROUND 0/0/0
+#gmt gmtset FONT 12p,Helvetica,black
+gmt gmtset FONT 9p,Times-Roman,black
+#gmt gmtset PS_MEDIA custom_2.8ix2.8i
+gmt gmtset PS_MEDIA letter
+gmt gmtset PS_PAGE_ORIENTATION portrait
+#gmt gmtset GMT_VERBOSE d
+
+figfolder=../figures/
+
+
+length=1.8i
+projection=X$length
+minOldString1='(-1) sh mx'
+minNewString1='(-max) sh mx'
+maxOldString1='(1) sh mx'
+maxNewString1='(max) sh mx'
+
+minOldString2='(-1) bc Z'
+minNewString2='(-max) bc Z'
+maxOldString2='(1) bc Z'
+maxNewString2='(max) bc Z'
+
+zmin=-1
+zmax=1
+zinc=`echo "($zmax-($zmin))/100" | bc -l`
+domain=0.9i/-0.075i/1.2i/0.16ih
+#-----------------------------------------------------
+step_array=(35000 30001)
+normalization_array=(0.5 1)
+#step_array=(35000)
+#normalization_array=(0.5)
+for index in ${!step_array[*]}
+do
+step=${step_array[$index]}
+normalization=${normalization_array[$index]}
+
+if [ $index == 0 ];
+then
+horizontal_offset=1.9i
+vertical_offset=$length
+inc=0.2
+xmin=-30
+xmax=30
+ymin=-30
+ymax=30
+region=$xmin/$xmax/$ymin/$ymax
+cptfile=seismic.cpt
+
+
+type=sh
+name=wavefield_$step
+ps=$figfolder$name\_$type.ps
+eps=$figfolder$name\_$type.eps
+pdf=$figfolder$name\_$type.pdf
+
+#---------------------------------------------
+gmt gmtset MAP_FRAME_AXES WeSn
+backupfolder=../$type/0/backup/
+source=$backupfolder\source
+receiver=$backupfolder\receiver
+originalxyz=$backupfolder$name.xyz
+processedxyz=$backupfolder$name.xyz.processed
+cpt=$backupfolder$name.cpt
+grd=$backupfolder$name.nc
+grad=$backupfolder$name.int.nc
+lambda=`cat $backupfolder\lambda`
+
+gmt makecpt -C$cptfile -T$zmin/$zmax/$zinc > $cpt
+
+col=3
+cat $originalxyz | awk -v lambda="$lambda" -v col="$col" -v normalization="$normalization" '{ print $1/lambda, $2/lambda, $col/normalization }' | blockmean -R$region -I$inc | gmt surface -R$region -I$inc -G$grd
+#gmt grdgradient $grd -A15 -Ne0.75 -G$grad
+
+#gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa20f10+l"Horizontal offset (@~l@~@-s@-)" -Bya20f10+l"Vertical offset (@~l@~@-s@-)" -Y5i -K> $ps #  Bya2fg2
+gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa20f10+l"Horizontal offset" -Bya20f10+l"Vertical offset" -Y5i -K> $ps #  Bya2fg2
+awk -v lambda="$lambda" '{ print $1/lambda, $2/lambda }' $receiver | gmt psxy -R -J -St0.05i -Gred -N -Wthinner,black -O -K >> $ps
+awk -v lambda="$lambda" '{ print $1/lambda, $2/lambda }' $source   | gmt psxy -R -J -Sa0.05i -Gred -N -Wthinner,black -O -K >> $ps
+echo "-30 33 (a)" | gmt pstext -R -J -F+jLB -N -O -K >> $ps
+echo "-28 22 normal" | gmt pstext -R -J -F+jLB -N -O -K >> $ps
+rm -f $grd $grad $cpt $processedxyz
+#---------------------------------------------
+gmt gmtset MAP_FRAME_AXES wesn
+backupfolder=../$type/12/backup/
+source=$backupfolder\source
+receiver=$backupfolder\receiver
+originalxyz=$backupfolder$name.xyz
+processedxyz=$backupfolder$name.xyz.processed
+cpt=$backupfolder$name.cpt
+grd=$backupfolder$name.nc
+grad=$backupfolder$name.int.nc
+lambda=`cat $backupfolder\lambda`
+
+gmt makecpt -C$cptfile -T$zmin/$zmax/$zinc > $cpt
+
+col=3
+cat $originalxyz | awk -v lambda="$lambda" -v col="$col" -v normalization="$normalization" '{ print $1/lambda, $2/lambda, $col/normalization }' | blockmean -R$region -I$inc | gmt surface -R$region -I$inc -G$grd
+#gmt grdgradient $grd -A15 -Ne0.75 -G$grad
+
+#gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa20f10+l"Horizontal offset (@~l@~@-s@-)" -Bya20f10+l"Vertical offset (@~l@~@-s@-)" -X$horizontal_offset -O -K >> $ps #  Bya2fg2
+gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa20f10+l"Horizontal offset" -Bya20f10+l"Vertical offset" -X$horizontal_offset -O -K >> $ps #  Bya2fg2
+awk -v lambda="$lambda" '{ print $1/lambda, $2/lambda }' $receiver | gmt psxy -R -J -St0.05i -Gred -N -Wthinner,black -O -K >> $ps
+awk -v lambda="$lambda" '{ print $1/lambda, $2/lambda }' $source   | gmt psxy -R -J -Sa0.05i -Gred -N -Wthinner,black -O -K >> $ps
+echo "-30 33 (b)" | gmt pstext -R -J -F+jLB -N -O -K >> $ps
+echo "-28 22 normal" | gmt pstext -R -J -F+jLB -N -O -K >> $ps
+#---------------------------------------------
+gmt psscale -D$domain -C$cpt -E -Bx1f0.5 -O | sed "s/$minOldString1/$minNewString1/g" | sed "s/$minOldString2/$minNewString2/g" | sed "s/$maxOldString1/$maxNewString1/g" | sed "s/$maxOldString2/$maxNewString2/g">> $ps
+rm -f $grd $grad $cpt $processedxyz
+
+gmt ps2raster -A -Te $figfolder$ps -D$figfolder
+epstopdf --outfile=$pdf $eps
+rm -f $figfolder\ps2raster_*bb
+rm -f $ps
+
+##############################################
+type=psv
+name=wavefield_$step
+ps=$figfolder$name\_$type.ps
+eps=$figfolder$name\_$type.eps
+pdf=$figfolder$name\_$type.pdf
+
+#---------------------------------------------
+gmt gmtset MAP_FRAME_AXES wesn
+backupfolder=../$type/0/backup/
+source=$backupfolder\source
+receiver=$backupfolder\receiver
+originalxyz=$backupfolder$name.xyz
+processedxyz=$backupfolder$name.xyz.processed
+cpt=$backupfolder$name.cpt
+grd=$backupfolder$name.nc
+grad=$backupfolder$name.int.nc
+lambda=`cat $backupfolder\lambda`
+
+gmt makecpt -C$cptfile -T$zmin/$zmax/$zinc > $cpt
+
+col=3
+cat $originalxyz | awk -v lambda="$lambda" -v col="$col" -v normalization="$normalization" '{ print $1/lambda, $2/lambda, $col/normalization }' | blockmean -R$region -I$inc | gmt surface -R$region -I$inc -G$grd
+#gmt grdgradient $grd -A15 -Ne0.75 -G$grad
+
+#gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa20f10+l"Horizontal offset (@~l@~@-s@-)" -Bya20f10+l"Vertical offset (@~l@~@-s@-)" -Y5i -K> $ps #  Bya2fg2
+gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa20f10+l"Horizontal offset" -Bya20f10+l"Vertical offset" -Y5i -K> $ps #  Bya2fg2
+awk -v lambda="$lambda" '{ print $1/lambda, $2/lambda }' $receiver | gmt psxy -R -J -St0.05i -Gred -N -Wthinner,black -O -K >> $ps
+awk -v lambda="$lambda" '{ print $1/lambda, $2/lambda }' $source   | gmt psxy -R -J -Sa0.05i -Gred -N -Wthinner,black -O -K >> $ps
+echo "-30 33 (a)" | gmt pstext -R -J -F+jLB -N -O -K >> $ps
+echo "-28 22 horizontal" | gmt pstext -R -J -F+jLB -N -O -K >> $ps
+rm -f $grd $grad $cpt $processedxyz
+#---------------------------------------------
+gmt gmtset MAP_FRAME_AXES wesn
+backupfolder=../$type/12/backup/
+source=$backupfolder\source
+receiver=$backupfolder\receiver
+originalxyz=$backupfolder$name.xyz
+processedxyz=$backupfolder$name.xyz.processed
+cpt=$backupfolder$name.cpt
+grd=$backupfolder$name.nc
+grad=$backupfolder$name.int.nc
+lambda=`cat $backupfolder\lambda`
+
+gmt makecpt -C$cptfile -T$zmin/$zmax/$zinc > $cpt
+
+col=3
+cat $originalxyz | awk -v lambda="$lambda" -v col="$col" -v normalization="$normalization" '{ print $1/lambda, $2/lambda, $col/normalization }' | blockmean -R$region -I$inc | gmt surface -R$region -I$inc -G$grd
+#gmt grdgradient $grd -A15 -Ne0.75 -G$grad
+
+#gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa20f10+l"Horizontal offset (@~l@~@-s@-)" -Bya20f10+l"Vertical offset (@~l@~@-s@-)" -X$horizontal_offset -O -K >> $ps #  Bya2fg2
+gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa20f10+l"Horizontal offset" -Bya20f10+l"Vertical offset" -X$horizontal_offset -O -K >> $ps #  Bya2fg2
+awk -v lambda="$lambda" '{ print $1/lambda, $2/lambda }' $receiver | gmt psxy -R -J -St0.05i -Gred -N -Wthinner,black -O -K >> $ps
+awk -v lambda="$lambda" '{ print $1/lambda, $2/lambda }' $source   | gmt psxy -R -J -Sa0.05i -Gred -N -Wthinner,black -O -K >> $ps
+echo "-30 33 (b)" | gmt pstext -R -J -F+jLB -N -O -K >> $ps
+echo "-28 22 horizontal" | gmt pstext -R -J -F+jLB -N -O -K >> $ps
+rm -f $grd $grad $cpt $processedxyz
+#---------------------------------------------
+gmt gmtset MAP_FRAME_AXES wesn
+backupfolder=../$type/12/backup/
+source=$backupfolder\source
+receiver=$backupfolder\receiver
+originalxyz=$backupfolder$name.xyz
+processedxyz=$backupfolder$name.xyz.processed
+cpt=$backupfolder$name.cpt
+grd=$backupfolder$name.nc
+grad=$backupfolder$name.int.nc
+lambda=`cat $backupfolder\lambda`
+
+gmt makecpt -C$cptfile -T$zmin/$zmax/$zinc > $cpt
+
+col=4
+cat $originalxyz | awk -v lambda="$lambda" -v col="$col" -v normalization="$normalization" '{ print $1/lambda, $2/lambda, $col/normalization }' | blockmean -R$region -I$inc | gmt surface -R$region -I$inc -G$grd
+#gmt grdgradient $grd -A15 -Ne0.75 -G$grad
+
+#gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa20f10+l"Horizontal offset (@~l@~@-s@-)" -Bya20f10+l"Vertical offset (@~l@~@-s@-)" -Y-$vertical_offset -O -K >> $ps #  Bya2fg2
+gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa20f10+l"Horizontal offset" -Bya20f10+l"Vertical offset" -Y-$vertical_offset -O -K >> $ps #  Bya2fg2
+awk -v lambda="$lambda" '{ print $1/lambda, $2/lambda }' $receiver | gmt psxy -R -J -St0.05i -Gred -N -Wthinner,black -O -K >> $ps
+awk -v lambda="$lambda" '{ print $1/lambda, $2/lambda }' $source   | gmt psxy -R -J -Sa0.05i -Gred -N -Wthinner,black -O -K >> $ps
+echo "-28 22 vertical" | gmt pstext -R -J -F+jLB -N -O -K >> $ps
+rm -f $grd $grad $cpt $processedxyz
+#---------------------------------------------
+gmt gmtset MAP_FRAME_AXES WeSn
+backupfolder=../$type/0/backup/
+source=$backupfolder\source
+receiver=$backupfolder\receiver
+originalxyz=$backupfolder$name.xyz
+processedxyz=$backupfolder$name.xyz.processed
+cpt=$backupfolder$name.cpt
+grd=$backupfolder$name.nc
+grad=$backupfolder$name.int.nc
+lambda=`cat $backupfolder\lambda`
+
+gmt makecpt -C$cptfile -T$zmin/$zmax/$zinc > $cpt
+
+col=4
+cat $originalxyz | awk -v lambda="$lambda" -v col="$col" -v normalization="$normalization" '{ print $1/lambda, $2/lambda, $col/normalization }' | blockmean -R$region -I$inc | gmt surface -R$region -I$inc -G$grd
+#gmt grdgradient $grd -A15 -Ne0.75 -G$grad
+
+#gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa20f10+l"Horizontal offset (@~l@~@-s@-)" -Bya20f10+l"Vertical offset (@~l@~@-s@-)" -X-$horizontal_offset -O -K >> $ps #  Bya2fg2
+gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa20f10+l"Horizontal offset" -Bya20f10+l"Vertical offset" -X-$horizontal_offset -O -K >> $ps #  Bya2fg2
+awk -v lambda="$lambda" '{ print $1/lambda, $2/lambda }' $receiver | gmt psxy -R -J -St0.05i -Gred -N -Wthinner,black -O -K >> $ps
+awk -v lambda="$lambda" '{ print $1/lambda, $2/lambda }' $source   | gmt psxy -R -J -Sa0.05i -Gred -N -Wthinner,black -O -K >> $ps
+echo "-28 22 vertical" | gmt pstext -R -J -F+jLB -N -O -K >> $ps
+#---------------------------------------------
+gmt psscale -D$domain -C$cpt -E -Bx1f0.5 -X$horizontal_offset -O | sed "s/$minOldString1/$minNewString1/g" | sed "s/$minOldString2/$minNewString2/g" | sed "s/$maxOldString1/$maxNewString1/g" | sed "s/$maxOldString2/$maxNewString2/g">> $ps
+rm -f $grd $grad $cpt $processedxyz
+
+gmt ps2raster -A -Te $figfolder$ps -D$figfolder
+epstopdf --outfile=$pdf $eps
+rm -f $figfolder\ps2raster_*bb
+rm -f $ps
+
+elif [ $index == 1 ];
+then
+horizontal_offset=$length
+vertical_offset=$length
+inc=0.05
+xmin=-5
+xmax=5
+ymin=-25
+ymax=-15
+region=$xmin/$xmax/$ymin/$ymax
+cptfile=GMT_seis.cpt
+
+for type in sh psv
+do
+
+if [ $type == sh ];
+then
+col_array2=(3)
+elif [ $type == psv ];
+then
+col_array2=(3 4)
+fi
+
+for index2 in ${!col_array2[*]}
+do
+
+col=${col_array2[$index2]}
+
+name=wavefield_$step
+ps=$figfolder$name\_$type\_$col.ps
+eps=$figfolder$name\_$type\_$col.eps
+pdf=$figfolder$name\_$type\_$col.pdf
+
+gmt gmtset MAP_FRAME_AXES wesn
+backupfolder=../$type/0/backup/
+source=$backupfolder\source
+receiver=$backupfolder\receiver
+originalxyz=$backupfolder$name.xyz
+processedxyz=$backupfolder$name.xyz.processed
+cpt=$backupfolder$name.cpt
+grd=$backupfolder$name.nc
+grad=$backupfolder$name.int.nc
+lambda=`cat $backupfolder\lambda`
+
+gmt makecpt -C$cptfile -T$zmin/$zmax/$zinc > $cpt
+
+cat $originalxyz | awk -v lambda="$lambda" -v col="$col" -v normalization="$normalization" '{ print $1/lambda, $2/lambda, $col/normalization }' | blockmean -R$region -I$inc | gmt surface -R$region -I$inc -G$grd
+#gmt grdgradient $grd -A15 -Ne0.75 -G$grad
+
+#gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa5f2.5+l"Horizontal offset (@~l@~@-s@-)" -Bya5f2.5+l"Vertical offset (@~l@~@-s@-)" -Y5i -K> $ps #  Bya2fg2
+gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa5f2.5+l"Horizontal offset" -Bya5f2.5+l"Vertical offset" -Y5i -K> $ps #  Bya2fg2
+echo "-4.5 -16.5 (a)" | gmt pstext -R -J -F+jLB -N -O -K >> $ps
+#awk -v lambda="$lambda" '{ print $1/lambda, $2/lambda }' $receiver | gmt psxy -R -J -St0.05i -Gred -N -Wthinner,black -O -K >> $ps
+#awk -v lambda="$lambda" '{ print $1/lambda, $2/lambda }' $source   | gmt psxy -R -J -Sa0.05i -Gred -N -Wthinner,black -O -K >> $ps
+rm -f $grd $grad $cpt $processedxyz
+#---------------------------------------------
+gmt gmtset MAP_FRAME_AXES wesn
+backupfolder=../$type/4/backup/
+source=$backupfolder\source
+receiver=$backupfolder\receiver
+originalxyz=$backupfolder$name.xyz
+processedxyz=$backupfolder$name.xyz.processed
+cpt=$backupfolder$name.cpt
+grd=$backupfolder$name.nc
+grad=$backupfolder$name.int.nc
+lambda=`cat $backupfolder\lambda`
+
+gmt makecpt -C$cptfile -T$zmin/$zmax/$zinc > $cpt
+
+cat $originalxyz | awk -v lambda="$lambda" -v col="$col" -v normalization="$normalization" '{ print $1/lambda, $2/lambda, $col/normalization }' | blockmean -R$region -I$inc | gmt surface -R$region -I$inc -G$grd
+#gmt grdgradient $grd -A15 -Ne0.75 -G$grad
+
+#gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa5f2.5+l"Horizontal offset (@~l@~@-s@-)" -Bya5f2.5+l"Vertical offset (@~l@~@-s@-)" -X$horizontal_offset -O -K >> $ps #  Bya2fg2
+gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa5f2.5+l"Horizontal offset" -Bya5f2.5+l"Vertical offset" -X$horizontal_offset -O -K >> $ps #  Bya2fg2
+echo "-4.5 -16.5 (b)" | gmt pstext -R -J -F+jLB -N -O -K >> $ps
+#awk -v lambda="$lambda" '{ print $1/lambda, $2/lambda }' $receiver | gmt psxy -R -J -St0.05i -Gred -N -Wthinner,black -O -K >> $ps
+#awk -v lambda="$lambda" '{ print $1/lambda, $2/lambda }' $source   | gmt psxy -R -J -Sa0.05i -Gred -N -Wthinner,black -O -K >> $ps
+rm -f $grd $grad $cpt $processedxyz
+#---------------------------------------------
+gmt gmtset MAP_FRAME_AXES wesn
+backupfolder=../$type/12/backup/
+source=$backupfolder\source
+receiver=$backupfolder\receiver
+originalxyz=$backupfolder$name.xyz
+processedxyz=$backupfolder$name.xyz.processed
+cpt=$backupfolder$name.cpt
+grd=$backupfolder$name.nc
+grad=$backupfolder$name.int.nc
+lambda=`cat $backupfolder\lambda`
+
+gmt makecpt -C$cptfile -T$zmin/$zmax/$zinc > $cpt
+
+cat $originalxyz | awk -v lambda="$lambda" -v col="$col" -v normalization="$normalization" '{ print $1/lambda, $2/lambda, $col/normalization }' | blockmean -R$region -I$inc | gmt surface -R$region -I$inc -G$grd
+#gmt grdgradient $grd -A15 -Ne0.75 -G$grad
+
+#gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa5f2.5+l"Horizontal offset (@~l@~@-s@-)" -Bya5f2.5+l"Vertical offset (@~l@~@-s@-)" -Y-$vertical_offset -O -K >> $ps #  Bya2fg2
+gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa5f2.5+l"Horizontal offset" -Bya5f2.5+l"Vertical offset" -Y-$vertical_offset -O -K >> $ps #  Bya2fg2
+echo "-4.5 -16.5 (d)" | gmt pstext -R -J -F+jLB -N -O -K >> $ps
+#awk -v lambda="$lambda" '{ print $1/lambda, $2/lambda }' $receiver | gmt psxy -R -J -St0.05i -Gred -N -Wthinner,black -O -K >> $ps
+#awk -v lambda="$lambda" '{ print $1/lambda, $2/lambda }' $source   | gmt psxy -R -J -Sa0.05i -Gred -N -Wthinner,black -O -K >> $ps
+rm -f $grd $grad $cpt $processedxyz
+#---------------------------------------------
+gmt gmtset MAP_FRAME_AXES WeSn
+backupfolder=../$type/8/backup/
+source=$backupfolder\source
+receiver=$backupfolder\receiver
+originalxyz=$backupfolder$name.xyz
+processedxyz=$backupfolder$name.xyz.processed
+cpt=$backupfolder$name.cpt
+grd=$backupfolder$name.nc
+grad=$backupfolder$name.int.nc
+lambda=`cat $backupfolder\lambda`
+
+gmt makecpt -C$cptfile -T$zmin/$zmax/$zinc > $cpt
+
+cat $originalxyz | awk -v lambda="$lambda" -v col="$col" -v normalization="$normalization" '{ print $1/lambda, $2/lambda, $col/normalization }' | blockmean -R$region -I$inc | gmt surface -R$region -I$inc -G$grd
+#gmt grdgradient $grd -A15 -Ne0.75 -G$grad
+
+#gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa5f2.5+l"Horizontal offset (@~l@~@-s@-)" -Bya5f2.5+l"Vertical offset (@~l@~@-s@-)" -X-$horizontal_offset -O -K >> $ps #  Bya2fg2
+gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa5f2.5+l"Horizontal offset" -Bya5f2.5+l"Vertical offset" -X-$horizontal_offset -O -K >> $ps #  Bya2fg2
+echo "-4.5 -16.5 (c)" | gmt pstext -R -J -F+jLB -N -O -K >> $ps
+#awk -v lambda="$lambda" '{ print $1/lambda, $2/lambda }' $receiver | gmt psxy -R -J -St0.05i -Gred -N -Wthinner,black -O -K >> $ps
+#awk -v lambda="$lambda" '{ print $1/lambda, $2/lambda }' $source   | gmt psxy -R -J -Sa0.05i -Gred -N -Wthinner,black -O -K >> $ps
+#---------------------------------------------
+gmt psscale -D$domain -C$cpt -E -Bx1f0.5 -X$horizontal_offset -O | sed "s/$minOldString1/$minNewString1/g" | sed "s/$minOldString2/$minNewString2/g" | sed "s/$maxOldString1/$maxNewString1/g" | sed "s/$maxOldString2/$maxNewString2/g">> $ps
+rm -f $grd $grad $cpt $processedxyz
+
+gmt ps2raster -A -Te $figfolder$ps -D$figfolder
+epstopdf --outfile=$pdf $eps
+rm -f $figfolder\ps2raster_*bb
+rm -f $ps
+done
+done
+
+fi
+
+done
+

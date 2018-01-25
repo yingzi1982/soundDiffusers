@@ -41,3 +41,5 @@ texFile=talk.tex
 /bin/rm -rf *.nav >  /dev/null
 /bin/rm -rf *.snm >  /dev/null
 
+
+../bash/git.sh ../latex/

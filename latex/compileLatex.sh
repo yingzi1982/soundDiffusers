@@ -38,4 +38,6 @@ texFile=talk.tex
 /bin/rm -rf *.ttt >  /dev/null
 /bin/rm -rf *.tit >  /dev/null
 /bin/rm -rf *.spl >  /dev/null
+/bin/rm -rf *.nav >  /dev/null
+/bin/rm -rf *.snm >  /dev/null
 

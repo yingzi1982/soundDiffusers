@@ -10,9 +10,8 @@
 #git init
 #git add README.md
 #git remote add origin https://github.com/yingzi1982/temp.git
-uploadFolder=$1
 
-git add $uploadFolder
+git add -u #$uploadFolder
 git commit -m "add new files in $uploadFolder..."
+#git pull origin master
 git push origin master
-git pull origin master

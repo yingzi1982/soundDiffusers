@@ -3,16 +3,17 @@
 #http://kbroman.org/github_tutorial/pages/init.html
 
 operation=$1
+folder=$2
 
 if [ $operation == 'push' ]
 then
-git add -A
-git commit -m "add new files in $uploadFolder..."
-git pull origin master
+git add $folder
+git commit -m "add new files in $folder..."
+#git pull origin master
 git push origin master
 elif [ $operation == 'pull' ]
 then
 git reset --hard HEAD
-git clean -f -d
+git clean -xffd
 git pull
 fi

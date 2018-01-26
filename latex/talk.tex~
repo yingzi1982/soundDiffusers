@@ -20,6 +20,5 @@
   \frametitle{}
   \framesubtitle{}
 	\includegraphics[width=0.8\textwidth]{../figures/cos_1000/deployment.pdf}
-	test
 \end{frame}
 \end{document}

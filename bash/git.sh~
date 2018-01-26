@@ -2,18 +2,34 @@
 #http://blog.csdn.net/sinat_20177327/article/details/76062030
 #http://kbroman.org/github_tutorial/pages/init.html
 
+operation=$1
+folder=$2
 
+<<<<<<< HEAD
 
 #create a new repository on the command line
 
 #echo "# temp" >> README.md
 #git init
 #git add README.md
-#git commit -m "first commit"
 #git remote add origin https://github.com/yingzi1982/temp.git
-#git push -u origin master
+uploadFolder=$1
 
-#push an existing repository from the command line
-
-#git remote add origin https://github.com/yingzi1982/temp.git
-#git push -u origin master
+git add $uploadFolder
+git commit -m "add new files in $uploadFolder..."
+git pull origin master
+git push origin master
+=======
+if [ $operation == 'push' ]
+then
+git add $folder
+git commit -m "add new files in $folder..."
+#git pull origin master
+git push origin master
+elif [ $operation == 'pull' ]
+then
+git reset --hard HEAD
+git clean -xffd
+git pull
+fi
+>>>>>>> 98b282a184d98ce87370867bb4824eafd5128bf1

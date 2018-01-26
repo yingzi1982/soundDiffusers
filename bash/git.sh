@@ -8,7 +8,7 @@ if [ $operation == 'push' ]
 then
 git add -u
 git commit -m "add new files in $uploadFolder..."
-#git pull origin master
+git pull origin master
 git push origin master
 elif [ $operation == 'pull' ]
 then

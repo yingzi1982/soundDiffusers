@@ -1,14 +1,21 @@
 #!/bin/bash
 cd ../gmt
 
-topoType=cos
-sourceFrequency=1000
-backupfolder=../backup/$topoType\_$sourceFrequency/
+#topoType=flat
+#sourceFrequency=1000
 
 
-./plotDeployment.sh $backupfolder
-./plotSnapshot.sh $backupfolder
-exit
+#for topoType in flat cos; do
+for topoType in triangle rectangle gauss unifrnd; do
+
+for sourceFrequency in 200 1000 5000; do
+backup=$topoType\_$sourceFrequency
+
+./plotDeployment.sh $backup
+./plotSnapshot.sh $backup
+
+done 
+done
 
 #for shell in $( ls plot*.sh );
 #do

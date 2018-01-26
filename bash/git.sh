@@ -15,3 +15,4 @@ uploadFolder=$1
 git add $uploadFolder
 git commit -m "add new files in $uploadFolder..."
 git push origin master
+git pull origin master

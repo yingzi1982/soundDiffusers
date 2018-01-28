@@ -3,16 +3,18 @@
 #http://kbroman.org/github_tutorial/pages/init.html
 
 operation=$1
-folder=$2
+#folder=$2
+folder="../bash ../figures ../fortran ../gmt ../gnuplot ../latex ../octave ../pbs"
 
 if [ $operation == 'push' ]
 then
 git add $folder
-git commit -m "add new files in $folder..."
+git commit -m "backup the whole system..."
 git push origin master
 elif [ $operation == 'pull' ]
 then
-git reset --hard HEAD
-git clean -xfd
-git pull
+echo "pull from repo"
+#git reset --hard HEAD
+#git clean -xfd
+#git pull
 fi

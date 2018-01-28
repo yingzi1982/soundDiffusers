@@ -15,6 +15,7 @@ then
 backupfolder=../backup/$topoType\_$sourceFrequency
 mkdir $backupfolder
 
+rm ../OUTPUT_FILES/wavefield00000*_01.txt
 mv ../OUTPUT_FILES/wavefield*_01.txt $backupfolder
 mv ../OUTPUT_FILES/wavefield_grid_for_dumps.txt $backupfolder
 mv ../OUTPUT_FILES/ARRAY*.semp  $backupfolder

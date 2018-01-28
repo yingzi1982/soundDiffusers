@@ -9,7 +9,7 @@ folder="../bash ../figures ../fortran ../gmt ../gnuplot ../latex ../octave ../pb
 if [ $operation == 'push' ]
 then
 git add $folder
-git commit -m "backup the whole system..."
+git commit -m "pushing $folder"
 git push origin master
 elif [ $operation == 'pull' ]
 then

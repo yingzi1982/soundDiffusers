@@ -3,6 +3,7 @@ source /usr/share/modules/init/bash
 module load apps gmt/intel/5.1.0
 
 
+#-------
 rm gmt.conf
 rm gmt.history
 

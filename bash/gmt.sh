@@ -6,7 +6,7 @@ cd ../gmt
 
 
 #for topoType in  flat cos triangle rectangle unifrnd gauss ; do
-for topoType in  rectangle unifrnd gauss flat cos triangle ; do
+for topoType in  cos triangle ; do
 
 for sourceFrequency in 200 1000 5000; do
 backup=$topoType\_$sourceFrequency

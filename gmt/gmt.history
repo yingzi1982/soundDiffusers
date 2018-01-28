@@ -1,8 +1,8 @@
 # GMT 5 Session common arguments shelf
 BEGIN GMT 5.1.0
-B	xa1f0.5+lHorizontal offset (m) ya1f0.5+lVertical offset (m)
+B	xa0.01f0.005+lTime (s)ya1f0.5+lNormalized amplitude
 J	X
-JX	X2.2i
-R	-2/2/-2/2
-L	4
+JX	X2.2i/0.6i
+R	-0.006/0.0389997/-1/1
+L	1
 END

@@ -84,16 +84,15 @@ nx=`grep nx ../backup/Par_file_part | cut -d = -f 2`
 #nx=200
 inc=`echo "($xmax-($xmin))/$nx" | bc -l`
 
-cd $backupfolder
-allSnapshots=`ls wavefield*_01.txt`
-cd -
+
+allSnapshots=`ls $backupfolder\wavefield*_01.txt | cut -d '/' -f 4`
 
 for iSnapshot in $allSnapshots;
 do
 
-ps=$figfolder$iSnapshot.ps
-eps=$figfolder$iSnapshot.eps
-pdf=$figfolder$iSnapshot.pdf
+ps=$figfolder`echo $iSnapshot | cut -d '.' -f 1`.ps
+eps=$figfolder`echo $iSnapshot | cut -d '.' -f 1`.eps
+pdf=$figfolder`echo $iSnapshot | cut -d '.' -f 1`.pdf
 
 paste -d ' ' $meshGridFile $backupfolder$iSnapshot | awk  -v scale="$scale" -v normalization="$normalization" '{ if($3 >=(-normalization) && $3<=normalization){print $1/scale, $2/scale, $3/normalization} }'> $snapshotFile
 cat $snapshotFile | gmt blockmean -R$region -I$inc | gmt surface -Ll$lowerLimit -Lu$upperLimit -R$region -I$inc -G$grd
@@ -112,3 +111,5 @@ rm -f $figfolder/ps2raster_*bb
 
 done
 
+rm $figfolder\wavefield00000*_01.pdf
+gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile=$figfolder\merged.pdf $figfolder\wavefield0*_01.pdf

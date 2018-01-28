@@ -7,7 +7,7 @@ module load apps gmt/intel/5.1.0
 rm gmt.conf
 rm gmt.history
 
-gmt gmtset MAP_FRAME_AXES weSn
+gmt gmtset MAP_FRAME_AXES S
 gmt gmtset MAP_FRAME_TYPE plain
 gmt gmtset MAP_FRAME_PEN thick
 gmt gmtset MAP_TICK_PEN thick
@@ -44,18 +44,19 @@ pdf=$figfolder\signal.pdf
 name=ARRAY.S1.PRE.semp
 originalxy=$backupfolder$name
 
-xmin=`gmt gmtinfo $originalxyz -C | awk '{printf "%.5f", $1}'`
-xmax=`gmt gmtinfo $originalxyz -C | awk '{printf "%.5f", $2}'`
-ymin=`gmt gmtinfo $originalxyz -C | awk '{printf "%.5f", $3}'`
-ymax=`gmt gmtinfo $originalxyz -C | awk '{printf "%.5f", $4}'`
-echo $xmin $xmax $ymin $ymax
-exit
+xmin=`gmt gmtinfo $originalxy -C | awk '{print $1}'`
+xmax=`gmt gmtinfo $originalxy -C | awk '{print $2}'`
+ymin=`gmt gmtinfo $originalxy -C | awk '{print $3}'`
+ymax=`gmt gmtinfo $originalxy -C | awk '{print $4}'`
 
-ymin=-1
-ymax=1
-region=$xmin/$xmax/$ymin/$ymax
+normalization=`echo $ymin $ymax | awk ' { if(sqrt($1^2)>(sqrt($2^2))) {print sqrt($1^2)} else {print sqrt($2^2)}}'`
+
+region=$xmin/$xmax/-1/1
 projection=X2.2i/0.6i
-cat $originalxy | gmt psxy -J$projection -R$region -B -Y$vertical_offset -Wthin,black -O >> $ps
+
+resampling=10
+
+awk -v resampling="$resampling" -v normalization="$normalization" 'NR%resampling==0 {print $1, $2/normalization}' $originalxy | gmt psxy -J$projection -R$region -Bxa0.01f0.005+l"Time (s)" -Bya1f0.5+l"Normalized amplitude" -Wthin,black > $ps
 
 rm -f $grd $cpt 
 

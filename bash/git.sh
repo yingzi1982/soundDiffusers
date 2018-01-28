@@ -14,7 +14,5 @@ git push origin master
 elif [ $operation == 'pull' ]
 then
 echo "pull from repo"
-#git reset --hard HEAD
-#git clean -xfd
-#git pull
+git pull origin master
 fi

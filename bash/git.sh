@@ -13,6 +13,6 @@ git push origin master
 elif [ $operation == 'pull' ]
 then
 git reset --hard HEAD
-git clean -xffd
+git clean -xfd
 git pull
 fi

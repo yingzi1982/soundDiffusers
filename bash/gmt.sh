@@ -5,14 +5,15 @@ cd ../gmt
 #sourceFrequency=1000
 
 
-#for topoType in  flat cos triangle rectangle unifrnd gauss ; do
-for topoType in  cos triangle ; do
+for topoType in  flat cos triangle rectangle gauss ; do
+#for topoType in  triangle ; do
 
 for sourceFrequency in 200 1000 5000; do
 backup=$topoType\_$sourceFrequency
 
-./plotDeployment.sh $backup
-./plotSnapshot.sh $backup
+#./plotDeployment.sh $backup
+./plotSignal.sh $backup
+#./plotSnapshot.sh $backup
 
 done 
 done

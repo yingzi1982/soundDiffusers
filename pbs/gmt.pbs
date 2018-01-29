@@ -1,0 +1,27 @@
+#!/bin/bash
+
+#PBS -V
+#PBS -r n
+#PBS -l walltime=5:00:00
+#PBS -l nodes=1:ppn=24
+
+#PBS -N specfem2d
+#PBS -A ucd01 #ndear017c #ucd01 #dias01
+#PBS -j oe
+#PBS -o specfem.log
+##PBS -e specfem.err
+#PBS -m bea
+#PBS -M yingzi.ying@hotmail.com
+
+source /usr/share/modules/init/bash
+module load libs intel-runtime/2013-sp1-u3
+
+echo "-------------------------------------------"
+echo "started at `date`"
+echo "--------------------------------------------"
+
+
+
+cd $PBS_O_WORKDIR
+cd ../bash
+./gmt.sh

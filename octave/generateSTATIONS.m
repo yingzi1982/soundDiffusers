@@ -4,21 +4,24 @@ clear all
 close all
 clc
 
-[xminStatus xmin] = system('grep xmin ../backup/Par_file_part | cut -d = -f 2');
-xmin = str2num(xmin);
+%[xminStatus xmin] = system('grep xmin ../backup/Par_file_part | cut -d = -f 2');
+%xmin = str2num(xmin);
 
-[xmaxStatus xmax] = system('grep xmax ../backup/Par_file_part | cut -d = -f 2');
-xmax = str2num(xmax);
+%[xmaxStatus xmax] = system('grep xmax ../backup/Par_file_part | cut -d = -f 2');
+%xmax = str2num(xmax);
 
-ratio = 0.6;
 
 input = input('Please input the step: ','s')
 step = str2num(input);
 switch step
 case 1
 
-xi_station = [ratio*xmax];
-gamma_station = [ratio*xmin];
+theta_station_step = deg2rad(2.5);
+theta_station_gap = 2*theta_station_step;
+
+theta_station = [pi+theta_station_gap : theta_station_step : 2*pi-theta_station_gap];
+r_station = 5*ones(size(theta_station));
+[xi_station, gamma_station] = pol2cart (theta_station, r_station);
 networkName = 'ARRAY';
 elevation_station = zeros(size(xi_station));
 burial_station = zeros(size(xi_station));

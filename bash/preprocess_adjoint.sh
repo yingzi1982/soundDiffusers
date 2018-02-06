@@ -2,6 +2,7 @@
 simulationType=$1
 topoType=$2
 sourceFrequency=$3
+incidentAngle=$4
 
 echo ">>preprocessing"
 source /usr/share/modules/init/bash

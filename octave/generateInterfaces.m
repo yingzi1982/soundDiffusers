@@ -20,9 +20,11 @@ x=linspace(xmin,xmax,xNumber);
 %TOPO_slice=load('../backup/TOPO_slice');
 %TOPO_slice = transpose(TOPO_slice);
 
-interfaces = [xmin xmax];
+%interfaces = [xmin xmax];
+interfaces = [xmin 0];
 
-layers = [nx];
+%layers = [nx];
+layers = [floor(nx/2)];
 
 subInterfaces = repmat(transpose(interfaces),[1,xNumber]);
 

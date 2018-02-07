@@ -26,6 +26,9 @@ networkName = 'ARRAY';
 elevation_station = zeros(size(xi_station));
 burial_station = zeros(size(xi_station));
 
+receiver_polar = [transpose(theta_station) transpose(r_station)];
+save('-ascii','../backup/receiver_polar','receiver_polar')
+
 receiver = [transpose(xi_station) transpose(gamma_station)];
 save('-ascii','../backup/receiver','receiver')
 

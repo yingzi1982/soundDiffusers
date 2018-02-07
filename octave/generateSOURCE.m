@@ -13,19 +13,20 @@ xmax = str2num(xmax);
 [f0Status freq0] = system('grep f0_attenuation ../backup/Par_file_part | cut -d = -f 2');
 freq0 = str2num(freq0);
 
-
-ratio = 0.6;
-
-
 input = input('Please input the step: ','s')
-step = str2num(input);
+input = str2num(input);
+step = input(1);
+incidentAngle = input(2);
+
+radii = 10;
+theta = pi*3/2 -deg2rad(incidentAngle);
 
 switch step
 
 case 1
 source_surf                     = {'.false.'};
-xs                              = [xmin*ratio];
-zs                              = [xmin*ratio];
+xs                              = [radii*cos(theta)];
+zs                              = [radii*sin(theta)];
 source_type                     = [1];
 time_function_type              = [1];
 name_of_source_file             = {'SOURCE_FILE'};

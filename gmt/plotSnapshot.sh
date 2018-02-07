@@ -78,7 +78,8 @@ lowerLimit=-$normalization
 snapshotFile=$backupfolder\snapshot
 grd=$snapshotFile.nc
 
-projection=X2.2i
+projection=X2.2i/2.2i
+
 region=$xmin/$xmax/$ymin/$ymax
 nx=`grep nx ../backup/Par_file_part | cut -d = -f 2`
 #nx=200

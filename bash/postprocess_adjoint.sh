@@ -3,7 +3,9 @@ source /usr/share/modules/init/bash
 echo ">>postprocessing"
 simulationType=$1
 topoType=$2
-sourceFrequency=$3
+#sourceFrequency=$3
+sourceIncidentAngle=$3
+
 
 if [ $simulationType -eq 1 ];
 then
@@ -12,14 +14,16 @@ then
 #cd ../octave
 #./generateAdjointSources.m
 #module unload apps octave/intel/3.6.4
-backupfolder=../backup/$topoType\_$sourceFrequency
+#backupfolder=../backup/$topoType\_$sourceFrequency\_$sourceIncidentAngle
+backupfolder=../backup/$topoType\_$sourceIncidentAngle
 mkdir $backupfolder
 
 rm ../OUTPUT_FILES/wavefield00000*_01.txt
 mv ../OUTPUT_FILES/wavefield*_01.txt $backupfolder
 mv ../OUTPUT_FILES/wavefield_grid_for_dumps.txt $backupfolder
 mv ../OUTPUT_FILES/ARRAY*.semp  $backupfolder
-cp ../backup/lambda ../backup/source ../backup/receiver ../backup/topoPolygon $backupfolder
+#cp ../backup/lambda ../backup/source ../backup/receiver ../backup/topoPolygon $backupfolder
+cp ../backup/source ../backup/receiver ../backup/topoPolygon $backupfolder
 
 elif [ $simulationType -eq 3 ];
 then

@@ -1,8 +1,8 @@
 #!/bin/bash
 simulationType=$1
 topoType=$2
-sourceFrequency=$3
-incidentAngle=$4
+#sourceFrequency=$3
+sourceIncidentAngle=$3
 
 echo ">>preprocessing"
 source /usr/share/modules/init/bash
@@ -12,12 +12,12 @@ if [ $simulationType -eq 1 ];
 then
 #-----------------------------------------------------
 cd ../octave
-oldString=`grep "^f0_attenuation" ../backup/Par_file_part`
-newString="f0_attenuation                  = $sourceFrequency"
-sed -i "s/$oldString/$newString/g" ../backup/Par_file_part
+#oldString=`grep "^f0_attenuation" ../backup/Par_file_part`
+#newString="f0_attenuation                  = $sourceFrequency"
+#sed -i "s/$oldString/$newString/g" ../backup/Par_file_part
 
 step=1
-echo $step | ./generateSOURCE.m
+echo $step $sourceIncidentAngle | ./generateSOURCE.m
 echo "SOURCE created"
 
 #echo $step | ./generateSOURCE_TIME_FUNCTION.m

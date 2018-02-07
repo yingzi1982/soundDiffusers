@@ -23,7 +23,7 @@ baseThickness = 2*NELEM_PML_THICKNESS*dx;
 %win = [zeros(2*NELEM_PML_THICKNESS,1); transpose(welchwin(xNumber - 4*NELEM_PML_THICKNESS)); zeros(2*NELEM_PML_THICKNESS,1)];
 
 % comment the following lines to extend the whole width
-length = 1.2;
+length = 2;
 xmin = -length/2;
 xmax =  length/2;
 

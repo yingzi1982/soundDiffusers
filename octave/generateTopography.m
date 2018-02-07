@@ -42,7 +42,7 @@ switch topoType
   error('Wrong topography type\n')
 end
 
-topo = -(topo - min(topo) + baseThickness);
+topo = (topo - min(topo) + baseThickness);
 topo = [x topo];
 
 backTopo = zeros(size(x));

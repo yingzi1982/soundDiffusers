@@ -7,9 +7,9 @@ rm gmt.history
 
 gmt gmtset MAP_FRAME_AXES WeSn
 gmt gmtset MAP_FRAME_TYPE plain
-gmt gmtset MAP_FRAME_PEN thick
-gmt gmtset MAP_TICK_PEN thick
-gmt gmtset MAP_TICK_LENGTH_PRIMARY -3p
+#gmt gmtset MAP_FRAME_PEN thick
+#gmt gmtset MAP_TICK_PEN thick
+#gmt gmtset MAP_TICK_LENGTH_PRIMARY -3p
 #gmt gmtset MAP_DEGREE_SYMBOL none
 #gmt gmtset MAP_GRID_CROSS_SIZE_PRIMARY 0.0i
 #gmt gmtset MAP_GRID_CROSS_SIZE_SECONDARY 0.0i
@@ -40,7 +40,6 @@ scale=1
 
 #-----------------------------------------------------
 name=deployment
-projection=X2.2i
 
 source=$backupfolder\source
 receiver=$backupfolder\receiver
@@ -53,18 +52,17 @@ pdf=$figfolder$name.pdf
 
 xmin=`grep xmin ../backup/Par_file_part  | cut -d = -f 2 | awk -v scale="$scale" '{print $1/scale}'`
 xmax=`grep xmax ../backup/Par_file_part  | cut -d = -f 2 | awk -v scale="$scale" '{print $1/scale}'`
-ymin=$xmin
-ymax=$xmax
+ymin=`echo "-(($xmax)-($xmin))/2" | bc -l`
+ymax=0
+width=2.2
+height=`echo "$width*(($ymax)-($ymin))/(($xmax)-($xmin))" | bc -l`
+projection=X$width\i/$height\i
 
-#cat $topo > $topo_polygon
-#echo $xmax $ymax >> $topo_polygon
-#echo $xmin $ymax >> $topo_polygon
- 
 region=$xmin/$xmax/$ymin/$ymax
 
-awk -v scale="$scale" '{ print $1/scale, $2/scale }' $topo_polygon | gmt psxy -R$region -J$projection  -Bxa1f0.5+l"Horizontal offset (m) " -Bya1f0.5+l"Vertical offset (m)" -Ggray -W1p -K > $ps #-L+yt -Ggray 
-awk -v scale="$scale" '{ print $1/scale, $2/scale }' $receiver | gmt psxy -R -J -St0.05i -Gblue -N -Wthinner,black -O -K >> $ps
-awk -v scale="$scale" '{ print $1/scale, $2/scale }' $source   | gmt psxy -R -J -Sa0.05i -Gred  -N -Wthinner,black -O >> $ps
+awk -v scale="$scale" '{ print $1/scale, $2/scale }' $topo_polygon | gmt psxy -R$region -J$projection  -Bxa5f2.5+l"Cross range (m) " -Bya5f2.5+l"Range (m)" -Gred -W0.5p -K > $ps #-L+yt -Ggray 
+#awk -v scale="$scale" '{ print $1/scale, $2/scale }' $source   | gmt psxy -R -J -Sa0.05i -Gred  -N -Wthinner,black -O -K >> $ps
+awk -v scale="$scale" '{ print $1/scale, $2/scale }' $receiver | gmt psxy -R -J -Sc0.02i -Gblue -N -Wthinner,black -O    >> $ps
 
 
 gmt ps2raster -A -Te $ps -D$figfolder

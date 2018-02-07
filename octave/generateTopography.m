@@ -13,35 +13,39 @@ xmax = str2num(xmax);
 
 [nxStatus nx] = system('grep nx ../backup/Par_file_part | cut -d = -f 2');
 nx = str2num(nx);
-xNumber = nx + 1;
+dx = (xmax-xmin)/nx;
 
-%[NELEM_PML_THICKNESSStatus NELEM_PML_THICKNESS] = system('grep NELEM_PML_THICKNESS ../backup/Par_file_part | cut -d = -f 2');
-%NELEM_PML_THICKNESS = str2num(NELEM_PML_THICKNESS);
+[NELEM_PML_THICKNESSStatus NELEM_PML_THICKNESS] = system('grep NELEM_PML_THICKNESS ../backup/Par_file_part | cut -d = -f 2');
+NELEM_PML_THICKNESS = str2num(NELEM_PML_THICKNESS);
+
+baseThickness = 2*NELEM_PML_THICKNESS*dx;
 
 %win = [zeros(2*NELEM_PML_THICKNESS,1); transpose(welchwin(xNumber - 4*NELEM_PML_THICKNESS)); zeros(2*NELEM_PML_THICKNESS,1)];
 
-%dx = (xmax-xmin)/xNumber;
+% comment the following lines to extend the whole width
+length = 1.2;
+xmin = -length/2;
+xmax =  length/2;
+
+x = transpose([xmin:dx:xmax]);
 
 
-x = transpose(linspace(xmin,xmax,xNumber));
-
-topoMean = max(x)*0.6;
-topoCorrLen = 0.2;
-topoAmp = 1/4*topoCorrLen;
+correlationLength = 0.2;
+amplitude = 1/4*correlationLength;
 
 switch topoType
   case 'flat'
-  topo = topoMean * ones(size(x));
-  case 'cos'
-  topo = topoMean + topoAmp*cos(2*pi/topoCorrLen*x);
+  topo = amplitude*zeros(size(x));
+  case 'sine'
+  topo = amplitude*sin(2*pi/correlationLength*x-pi/4);
   otherwise
   error('Wrong topography type\n')
 end
 
-wallThickness = 0.3;
-backTopo = topoMean * ones(size(x)) + wallThickness;
-
+topo = -(topo - min(topo) + baseThickness);
 topo = [x topo];
+
+backTopo = zeros(size(x));
 backTopo = [x backTopo];
 
 save('-ascii','../backup/topo','topo')

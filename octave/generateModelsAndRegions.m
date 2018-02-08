@@ -4,25 +4,24 @@ clear all
 close all
 clc
 
+mesh_info = load('../backup/mesh_info');
+xmin = mesh_info(1);
+xmax = mesh_info(2);
+  nx = mesh_info(3);
+
+zmin = mesh_info(4);
+zmax = mesh_info(5);
+  nz = mesh_info(6);
+
+dx = (xmax - xmin)/nx;
+dz = (zmax - zmin)/nz;
+
 [NELEM_PML_THICKNESSStatus NELEM_PML_THICKNESS] = system('grep NELEM_PML_THICKNESS ../backup/Par_file_part | cut -d = -f 2');
 NELEM_PML_THICKNESS = str2num(NELEM_PML_THICKNESS);
 
-% generate interfaces
-[xminStatus xmin] = system('grep xmin ../backup/Par_file_part | cut -d = -f 2');
-xmin = str2num(xmin);
-
-[xmaxStatus xmax] = system('grep xmax ../backup/Par_file_part | cut -d = -f 2');
-xmax = str2num(xmax);
-
-[nxStatus nx] = system('grep nx ../backup/Par_file_part | cut -d = -f 2');
-nx = str2num(nx);
-dx = (xmax - xmin)/nx;
-
-quasi_gypsum_length = dx*(NELEM_PML_THICKNESS+1);
+quasi_gypsum_length_x = dx*(NELEM_PML_THICKNESS+1);
+quasi_gypsum_length_z = dz*(NELEM_PML_THICKNESS+1);
 [PML_conditionsStatus PML_conditions] = system('grep ^PML_BOUNDARY_CONDITIONS ../backup/Par_file_part | cut -d = -f 2');
-
-ymin = 0;
-ymax = xmax;
 
 %[f0Status f0] = system('grep f0 ../DATA/SOURCE | cut -d = -f 2');
 %f0 = str2num(f0);
@@ -67,7 +66,6 @@ spatial_sampling = load('../backup/proc000000_rho_vp_vs.dat.serial');
 spatial_sampling = [spatial_sampling(round((1+NGLLX*NGLLZ)/2):NGLLX*NGLLZ:end,1) spatial_sampling(round((1+NGLLX*NGLLZ)/2):NGLLX*NGLLZ:end,2)];
 nbregions = rows(spatial_sampling);
 regions = zeros(nbregions,5);
-layer_number = nbregions/nx;
 
 [topo_spatial_sampling_x topo_spatial_sampling_x_index] = findNearest(topo(:,1),spatial_sampling(:,1));
 [backTopo_spatial_sampling_x backTopo_spatial_sampling_x_index] = findNearest(backTopo(:,1),spatial_sampling(:,1));
@@ -77,10 +75,10 @@ gypsum_region_indices = find( spatial_sampling(:,1) >= topo_xmin &...
                               spatial_sampling(:,2) <= topo(topo_spatial_sampling_x_index,2) & ...
                               spatial_sampling(:,2) >= backTopo(backTopo_spatial_sampling_x_index,2));
 
-quasi_gypsum_region_indices = gypsum_region_indices(find(spatial_sampling(gypsum_region_indices,1) <= xmin+quasi_gypsum_length ||...
-                                                         spatial_sampling(gypsum_region_indices,1) >= xmax-quasi_gypsum_length ||...
-                                                         spatial_sampling(gypsum_region_indices,2) <= ymin+quasi_gypsum_length ||...
-                                                         spatial_sampling(gypsum_region_indices,2) >= ymax-quasi_gypsum_length));
+quasi_gypsum_region_indices = gypsum_region_indices(find(spatial_sampling(gypsum_region_indices,1) <= xmin+quasi_gypsum_length_x ||...
+                                                         spatial_sampling(gypsum_region_indices,1) >= xmax-quasi_gypsum_length_x ||...
+                                                         spatial_sampling(gypsum_region_indices,2) <= zmin+quasi_gypsum_length_z ||...
+                                                         spatial_sampling(gypsum_region_indices,2) >= zmax-quasi_gypsum_length_z));
 
 regions(:,5) = 1;
 regions(gypsum_region_indices,5) = 2;
@@ -89,10 +87,10 @@ if strcmp (strtrim(PML_conditions), '.true.')
    regions(quasi_gypsum_region_indices,5) = 3;
 end
 
-for ilayer = [1:layer_number]
+for iz = [1:nz]
   for ix = [1:nx]
-    iregion = (ilayer-1)*nx + ix;
-    regions(iregion,1:end-1) = [ix ix ilayer ilayer];
+    iregion = (iz-1)*nx + ix;
+    regions(iregion,1:end-1) = [ix ix iz iz];
   end
 end
 
@@ -101,9 +99,9 @@ fprintf(fileID, '\n')
 fprintf(fileID, '#------------------------------------------------------------\n')
 fprintf(fileID, 'nbregions                        = %i\n',nbregions)
 fprintf(fileID, '#------------------------------------------------------------\n')
-for nregion = [1:nbregions]
+for iregion = [1:nbregions]
   fprintf(fileID, '%i %i %i %i %i\n', ...
- regions(nregion,1), regions(nregion,2), regions(nregion,3), regions(nregion,4), regions(nregion,5))
+ regions(iregion,1), regions(iregion,2), regions(iregion,3), regions(iregion,4), regions(iregion,5))
 end       
 fprintf(fileID, '\n')
 fclose(fileID);

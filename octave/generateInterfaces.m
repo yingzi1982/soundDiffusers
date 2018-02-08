@@ -4,7 +4,6 @@ clear all
 close all
 clc
 
-
 [xminStatus xmin] = system('grep xmin ../backup/Par_file_part | cut -d = -f 2');
 xmin = str2num(xmin);
 
@@ -16,11 +15,6 @@ nx = str2num(nx);
 xNumber = nx + 1;
 
 x=linspace(xmin,xmax,xNumber);
-
-%TOPO_slice=load('../backup/TOPO_slice');
-%TOPO_slice = transpose(TOPO_slice);
-
-%interfaces = [xmin xmax];
 
 zmin = 0;
 zmax = xmax;

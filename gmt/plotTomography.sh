@@ -56,23 +56,17 @@ ps=$figfolder$name.ps
 eps=$figfolder$name.eps
 pdf=$figfolder$name.pdf
 
+xmin=`awk '{print $1}' ../backup/mesh_info`
+xmax=`awk '{print $2}' ../backup/mesh_info`
+ymin=`awk '{print $4}' ../backup/mesh_info`
+ymax=`awk '{print $5}' ../backup/mesh_info`
 
-xmin=`gmt gmtinfo $originalxyz -C | awk '{print $1}'`
-exit
-xmax=`gmt gmtinfo $originalxyz -C | awk '{print $2}'`
-ymin=`gmt gmtinfo $originalxyz -C | awk '{print $3}'`
-ymax=`gmt gmtinfo $originalxyz -C | awk '{print $4}'`
 width=2.2
 height=`echo "$width*(($ymax)-($ymin))/(($xmax)-($xmin))" | bc -l`
 projection=X$width\i/$height\i
-echo $projection
-exit 
-
 
 #nx=`grep nx ../backup/Par_file_part | cut -d = -f 2`
-nx=300
-
-inc=`echo "($xmax-($xmin))/$nx" | bc -l`
+#inc=`echo "($xmax-($xmin))/$nx" | bc -l`
 inc=0.01
 
 #zmin=`gmt gmtinfo $originalxyz -C | awk '{print $9/1000}'`
@@ -89,19 +83,19 @@ region=$xmin/$xmax/$ymin/$ymax
 gmt makecpt -CGMT_polar.cpt -T$zmin/$zmax/$zinc -Z > $cpt
 
 cat $originalxyz | awk '{ print $1, $2, $5 }' | blockmean -R$region -I$inc > $processedxyz
-cat $processedxyz | gmt blockmode -R$region -I$inc | gmt surface -R$region -I$inc -G$grd
+cat $processedxyz | gmt blockmean -R$region -I$inc | gmt surface -R$region -I$inc -G$grd
 gmt grdgradient $grd -A15 -Ne0.75 -G$grad
 
 
 #gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa20f10+l"Horizontal offset (@~l@~@-s@-)" -Bya20f10+l"Vertical offset (@~l@~@-s@-)" -K > $ps #  Bya2fg2
 gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa5f2.5+l"Horizontal offset (m)" -Bya5f2.5+l"Vertical offset (m)" -K > $ps #  Bya2fg2
-awk '{ print $1, $2 }' $receiver | gmt psxy -R -J -St0.05i -Gred  -N -Wthinner,black -O -K >> $ps
-awk '{ print $1, $2 }' $source   | gmt psxy -R -J -Sa0.05i -Gblue -N -Wthinner,black -O -K >> $ps
+#awk '{ print $1, $2 }' $receiver | gmt psxy -R -J -St0.05i -Gred  -N -Wthinner,black -O -K >> $ps
+#awk '{ print $1, $2 }' $source   | gmt psxy -R -J -Sa0.05i -Gblue -N -Wthinner,black -O -K >> $ps
 
 gmt psscale -D$domain -C$cpt -E -Bxa100f50 -By+l"m/s" -O >> $ps
 
 gmt ps2raster -A -Te $figfolder$ps -D$figfolder
 epstopdf --outfile=$pdf $eps
 rm -f $grd $grad $cpt $processedxyz
-rm -f $ps
+rm -f $ps $eps
 rm -f $figfolder\ps2raster_*bb

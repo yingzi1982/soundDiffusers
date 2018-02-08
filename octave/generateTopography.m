@@ -5,14 +5,11 @@ clc
 
 topoType = input('Please input the topography type of interface: ','s');
 
-[xminStatus xmin] = system('grep xmin ../backup/Par_file_part | cut -d = -f 2');
-xmin = str2num(xmin);
+mesh_info = load('../backup/mesh_info');
+xmin = mesh_info(1);
+xmax = mesh_info(2);
+  nx = mesh_info(3);
 
-[xmaxStatus xmax] = system('grep xmax ../backup/Par_file_part | cut -d = -f 2');
-xmax = str2num(xmax);
-
-[nxStatus nx] = system('grep nx ../backup/Par_file_part | cut -d = -f 2');
-nx = str2num(nx);
 dx = (xmax-xmin)/nx;
 
 [NELEM_PML_THICKNESSStatus NELEM_PML_THICKNESS] = system('grep NELEM_PML_THICKNESS ../backup/Par_file_part | cut -d = -f 2');
@@ -22,12 +19,11 @@ baseThickness = 2*NELEM_PML_THICKNESS*dx;
 
 %win = [zeros(2*NELEM_PML_THICKNESS,1); transpose(welchwin(xNumber - 4*NELEM_PML_THICKNESS)); zeros(2*NELEM_PML_THICKNESS,1)];
 
-% comment the following lines to extend the whole width
-length = 2;
-xmin = -length/2;
-xmax =  length/2;
+topo_xmin = -1;
+topo_xmax =  1;
+length = topo_xmax - topo_xmin;
 
-x = transpose([xmin:dx:xmax]);
+x = transpose([topo_xmin:dx:topo_xmax]);
 
 
 correlationLength = 0.2;

@@ -50,10 +50,11 @@ ps=$figfolder$name.ps
 eps=$figfolder$name.eps
 pdf=$figfolder$name.pdf
 
-xmin=`grep xmin ../backup/Par_file_part  | cut -d = -f 2 | awk -v scale="$scale" '{print $1/scale}'`
-xmax=`grep xmax ../backup/Par_file_part  | cut -d = -f 2 | awk -v scale="$scale" '{print $1/scale}'`
-ymin=0
-ymax=`echo "(($xmax)-($xmin))/2" | bc -l`
+xmin=`awk -v scale="$scale" '{print $1/scale}' ../backup/mesh_info`
+xmax=`awk -v scale="$scale" '{print $2/scale}' ../backup/mesh_info`
+ymin=`awk -v scale="$scale" '{print $4/scale}' ../backup/mesh_info`
+ymax=`awk -v scale="$scale" '{print $5/scale}' ../backup/mesh_info`
+
 width=2.2
 height=`echo "$width*(($ymax)-($ymin))/(($xmax)-($xmin))" | bc -l`
 projection=X$width\i/$height\i

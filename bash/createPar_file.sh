@@ -3,7 +3,7 @@ echo  'please make sure that you have enough memory, interactive pbs mode is rec
 
 oldString=`grep "^SAVE_MODEL" ../backup/Par_file_part`
 newString='SAVE_MODEL                      = ascii'
-sed -i "s/$oldString/$newString/g" ../DATA/Par_file
+sed -i "s/$oldString/$newString/g" ../backup/Par_file_part
 
 ./createOUTPUT_MODEL_VELOCITY_FILE.sh
 

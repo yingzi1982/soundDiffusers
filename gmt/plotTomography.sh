@@ -43,7 +43,7 @@ maxNewString2='(max) bc Z'
 
 #-----------------------------------------------------
 name=TOMO
-domain=1.1i/-0.4i/1.2i/0.16ih
+domain=1.1i/-0.6i/1.2i/0.16ih
 
 #source=$backupfolder\source
 #receiver=$backupfolder\receiver

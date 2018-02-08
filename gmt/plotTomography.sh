@@ -7,9 +7,9 @@ rm gmt.history
 
 gmt gmtset MAP_FRAME_AXES WeSn
 gmt gmtset MAP_FRAME_TYPE plain
-gmt gmtset MAP_FRAME_PEN thick
-gmt gmtset MAP_TICK_PEN thick
-gmt gmtset MAP_TICK_LENGTH_PRIMARY -3p
+#gmt gmtset MAP_FRAME_PEN thick
+#gmt gmtset MAP_TICK_PEN thick
+#gmt gmtset MAP_TICK_LENGTH_PRIMARY -3p
 #gmt gmtset MAP_DEGREE_SYMBOL none
 #gmt gmtset MAP_GRID_CROSS_SIZE_PRIMARY 0.0i
 #gmt gmtset MAP_GRID_CROSS_SIZE_SECONDARY 0.0i
@@ -88,11 +88,11 @@ gmt grdgradient $grd -A15 -Ne0.75 -G$grad
 
 
 #gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa20f10+l"Horizontal offset (@~l@~@-s@-)" -Bya20f10+l"Vertical offset (@~l@~@-s@-)" -K > $ps #  Bya2fg2
-gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa5f2.5+l"Horizontal offset (m)" -Bya5f2.5+l"Vertical offset (m)" -K > $ps #  Bya2fg2
+gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa5f2.5+l"Cross range (m)" -Bya5f2.5+l"Range (m)" -K > $ps #  Bya2fg2
 #awk '{ print $1, $2 }' $receiver | gmt psxy -R -J -St0.05i -Gred  -N -Wthinner,black -O -K >> $ps
 #awk '{ print $1, $2 }' $source   | gmt psxy -R -J -Sa0.05i -Gblue -N -Wthinner,black -O -K >> $ps
 
-gmt psscale -D$domain -C$cpt -E -Bxa100f50 -By+l"m/s" -O >> $ps
+gmt psscale -D$domain -C$cpt -E -Bxa500f250 -By+l"m/s" -O >> $ps
 
 gmt ps2raster -A -Te $figfolder$ps -D$figfolder
 epstopdf --outfile=$pdf $eps

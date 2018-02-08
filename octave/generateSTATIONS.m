@@ -16,8 +16,8 @@ step = str2num(input);
 switch step
 case 1
 
-theta_station_step = deg2rad(2.5);
-theta_station_gap = 2*theta_station_step;
+theta_station_step = deg2rad(5);
+theta_station_gap = theta_station_step;
 
 theta_station = [theta_station_gap : theta_station_step : pi-theta_station_gap];
 r_station = 5*ones(size(theta_station));

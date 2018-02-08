@@ -33,7 +33,7 @@ switch topoType
   case 'flat'
   topo = amplitude*zeros(size(x));
   case 'sine'
-  topo = amplitude*sin(2*pi/correlationLength*(x-pi/4));
+  topo = amplitude*sin(2*pi/correlationLength*(x+pi/4));
   otherwise
   error('Wrong topography type\n')
 end

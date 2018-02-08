@@ -22,4 +22,3 @@ mv ./DATA/proc000000_rho_vp_vs.dat ./backup/proc000000_rho_vp_vs.dat.serial
 cd ./octave
 ./generateTOMO.m
 module unload apps octave/intel/3.6.4
-

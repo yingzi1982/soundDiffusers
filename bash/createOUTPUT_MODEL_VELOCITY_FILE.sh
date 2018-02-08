@@ -2,8 +2,8 @@
 
 cat ../backup/Par_file_part > ../DATA/Par_file
 
-nx=`grep nx ../DATA/Par_file | cut -d = -f 2`
-nz=`tail -n 2 ../DATA/interfaces.dat | head -n 1`
+nx=`cut -d ' ' -f 3 ../backup/mesh_info`
+nz=`cut -d ' ' -f 6 ../backup/mesh_info`
 
 echo "nbmodels                        = 1" >> ../DATA/Par_file
 echo "1 1 1.2d0 343.0d0 0.0d0 0 0 9999 9999 0 0 0 0 0 0" >> ../DATA/Par_file

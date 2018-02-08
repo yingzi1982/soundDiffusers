@@ -16,6 +16,9 @@ cd ../octave
 #newString="f0_attenuation                  = $sourceFrequency"
 #sed -i "s/$oldString/$newString/g" ../backup/Par_file_part
 
+./generateInterfaces.m
+echo "interfaces created"
+
 step=1
 echo $step $sourceIncidentAngle | ./generateSOURCE.m
 echo "SOURCE created"
@@ -25,9 +28,7 @@ echo "SOURCE created"
 
 echo $topoType | ./generateTopography.m
 echo "topography created"
-
-./generateInterfaces.m
-echo "interfaces created"
+exit
 
 cd ../bash
 ./createPar_file.sh

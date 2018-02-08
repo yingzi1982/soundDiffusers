@@ -45,10 +45,8 @@ maxNewString2='(max) bc Z'
 name=TOMO
 domain=1.1i/-0.4i/1.2i/0.16ih
 
-projection=X2.2i
-
-source=$backupfolder\source
-receiver=$backupfolder\receiver
+#source=$backupfolder\source
+#receiver=$backupfolder\receiver
 originalxyz=$backupfolder$name.xyz
 processedxyz=$backupfolder$name.xyz.processed
 cpt=$backupfolder$name.cpt
@@ -60,9 +58,16 @@ pdf=$figfolder$name.pdf
 
 
 xmin=`gmt gmtinfo $originalxyz -C | awk '{print $1}'`
+exit
 xmax=`gmt gmtinfo $originalxyz -C | awk '{print $2}'`
 ymin=`gmt gmtinfo $originalxyz -C | awk '{print $3}'`
 ymax=`gmt gmtinfo $originalxyz -C | awk '{print $4}'`
+width=2.2
+height=`echo "$width*(($ymax)-($ymin))/(($xmax)-($xmin))" | bc -l`
+projection=X$width\i/$height\i
+echo $projection
+exit 
+
 
 #nx=`grep nx ../backup/Par_file_part | cut -d = -f 2`
 nx=300
@@ -89,7 +94,7 @@ gmt grdgradient $grd -A15 -Ne0.75 -G$grad
 
 
 #gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa20f10+l"Horizontal offset (@~l@~@-s@-)" -Bya20f10+l"Vertical offset (@~l@~@-s@-)" -K > $ps #  Bya2fg2
-gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa1f0.5+l"Horizontal offset (m)" -Bya1f0.5+l"Vertical offset (m)" -K > $ps #  Bya2fg2
+gmt grdimage -R$region -J$projection $grd -C$cpt -Bxa5f2.5+l"Horizontal offset (m)" -Bya5f2.5+l"Vertical offset (m)" -K > $ps #  Bya2fg2
 awk '{ print $1, $2 }' $receiver | gmt psxy -R -J -St0.05i -Gred  -N -Wthinner,black -O -K >> $ps
 awk '{ print $1, $2 }' $source   | gmt psxy -R -J -Sa0.05i -Gblue -N -Wthinner,black -O -K >> $ps
 

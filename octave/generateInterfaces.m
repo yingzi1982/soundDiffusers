@@ -21,9 +21,18 @@ x=linspace(xmin,xmax,xNumber);
 %TOPO_slice = transpose(TOPO_slice);
 
 %interfaces = [xmin xmax];
-interfaces = [0 (xmax-xmin)/2];
 
-layers = [floor(nx/2)];
+zmin = 0;
+zmax = xmax;
+nz = ceil(nx/2);
+
+fileID = fopen(['../backup/mesh_info'],'w');
+  fprintf(fileID, '%f %f %i %f %f %i',xmin,xmax,nx,zmin,zmax,nz)
+fclose(fileID);
+
+interfaces = [zmin zmax];
+
+layers = [nz];
 
 subInterfaces = repmat(transpose(interfaces),[1,xNumber]);
 

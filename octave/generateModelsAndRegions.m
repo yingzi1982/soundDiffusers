@@ -17,12 +17,15 @@ xmax = str2num(xmax);
 [nxStatus nx] = system('grep nx ../backup/Par_file_part | cut -d = -f 2');
 nx = str2num(nx);
 dx = (xmax - xmin)/nx;
-%quasi_gypsum_length = dx*(NELEM_PML_THICKNESS+1);
-quasi_gypsum_length = dx*(2*NELEM_PML_THICKNESS);
 
+quasi_gypsum_length = dx*(NELEM_PML_THICKNESS+1);
+[PML_conditionsStatus PML_conditions] = system('grep ^PML_BOUNDARY_CONDITIONS ../backup/Par_file_part | cut -d = -f 2');
 
-[f0Status f0] = system('grep f0 ../DATA/SOURCE | cut -d = -f 2');
-f0 = str2num(f0);
+ymin = 0;
+ymax = xmax;
+
+%[f0Status f0] = system('grep f0 ../DATA/SOURCE | cut -d = -f 2');
+%f0 = str2num(f0);
 
 %-------------------------------------------------------------------------------------
 %material properties
@@ -54,6 +57,9 @@ fclose(fileID);
 topo = load('../backup/topo');
 backTopo = load('../backup/backTopo');
 
+topo_xmin = topo(1,1);
+topo_xmax = topo(end,1);
+
 
 NGLLX = 5;
 NGLLZ = NGLLX;
@@ -66,15 +72,22 @@ layer_number = nbregions/nx;
 [topo_spatial_sampling_x topo_spatial_sampling_x_index] = findNearest(topo(:,1),spatial_sampling(:,1));
 [backTopo_spatial_sampling_x backTopo_spatial_sampling_x_index] = findNearest(backTopo(:,1),spatial_sampling(:,1));
 
-gypsum_region_indices = find( spatial_sampling(:,2) >= topo(topo_spatial_sampling_x_index,2) & ...
-                              spatial_sampling(:,2) <= backTopo(backTopo_spatial_sampling_x_index,2));
+gypsum_region_indices = find( spatial_sampling(:,1) >= topo_xmin &...
+                              spatial_sampling(:,1) <= topo_xmax &...
+                              spatial_sampling(:,2) <= topo(topo_spatial_sampling_x_index,2) & ...
+                              spatial_sampling(:,2) >= backTopo(backTopo_spatial_sampling_x_index,2));
 
-quasi_gypsum_region_indices = gypsum_region_indices(find(spatial_sampling(gypsum_region_indices,1) <= xmin+quasi_gypsum_length | spatial_sampling(gypsum_region_indices,1) >= xmax-quasi_gypsum_length));
+quasi_gypsum_region_indices = gypsum_region_indices(find(spatial_sampling(gypsum_region_indices,1) <= xmin+quasi_gypsum_length ||...
+                                                         spatial_sampling(gypsum_region_indices,1) >= xmax-quasi_gypsum_length ||...
+                                                         spatial_sampling(gypsum_region_indices,2) <= ymin+quasi_gypsum_length ||...
+                                                         spatial_sampling(gypsum_region_indices,2) >= ymax-quasi_gypsum_length));
 
 regions(:,5) = 1;
 regions(gypsum_region_indices,5) = 2;
-regions(quasi_gypsum_region_indices,5) = 3;
-%regions(quasi_gypsum_region_indices,5) = 3;
+
+if strcmp (strtrim(PML_conditions), '.true.')
+   regions(quasi_gypsum_region_indices,5) = 3;
+end
 
 for ilayer = [1:layer_number]
   for ix = [1:nx]
@@ -95,6 +108,6 @@ end
 fprintf(fileID, '\n')
 fclose(fileID);
 
-lambda0 = airModel(4)/f0;
-save('-ascii','../backup/lambda','lambda0')
+%lambda0 = airModel(4)/f0;
+%save('-ascii','../backup/lambda','lambda0')
 

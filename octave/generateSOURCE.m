@@ -4,22 +4,16 @@ clear all
 close all
 clc
 
-[xminStatus xmin] = system('grep xmin ../backup/Par_file_part | cut -d = -f 2');
-xmin = str2num(xmin);
-
-[xmaxStatus xmax] = system('grep xmax ../backup/Par_file_part | cut -d = -f 2');
-xmax = str2num(xmax);
-
-[f0Status freq0] = system('grep f0_attenuation ../backup/Par_file_part | cut -d = -f 2');
-freq0 = str2num(freq0);
-
 input = input('Please input the step: ','s')
 input = str2num(input);
 step = input(1);
 incidentAngle = input(2);
 
-radii = 10;
-theta = pi*3/2 -deg2rad(incidentAngle);
+[f0Status freq0] = system('grep f0_attenuation ../backup/Par_file_part | cut -d = -f 2');
+freq0 = str2num(freq0);
+
+radii = 5;
+theta = deg2rad(incidentAngle);
 
 switch step
 

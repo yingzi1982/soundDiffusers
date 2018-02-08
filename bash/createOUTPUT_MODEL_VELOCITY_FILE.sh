@@ -1,13 +1,14 @@
 #!/bin/bash
 
-nx=`grep nx ../backup/Par_file_part | cut -d = -f 2`
-
 cat ../backup/Par_file_part > ../DATA/Par_file
+
+nx=`grep nx ../DATA/Par_file | cut -d = -f 2`
+nz=`tail -n 2 ../DATA/interfaces.dat | head -n 1`
 
 echo "nbmodels                        = 1" >> ../DATA/Par_file
 echo "1 1 1.2d0 343.0d0 0.0d0 0 0 9999 9999 0 0 0 0 0 0" >> ../DATA/Par_file
 echo "nbregions                       = 1" >> ../DATA/Par_file
-echo "1 $nx 1  $nx  1" >> ../DATA/Par_file
+echo "1 $nx 1  $nz  1" >> ../DATA/Par_file
 
 oldString=`grep "^NPROC " ../DATA/Par_file`
 newString='NPROC                           = 1'
@@ -23,4 +24,3 @@ cd ../
 ./xspecfem2D > OUTPUT_FILES/specfem.log
 
 mv ./DATA/proc000000_rho_vp_vs.dat ./backup/proc000000_rho_vp_vs.dat.serial
-

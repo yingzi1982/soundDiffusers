@@ -17,8 +17,8 @@ xNumber = nx + 1;
 x=linspace(xmin,xmax,xNumber);
 
 zmin = 0;
-zmax = xmax;
-nz = ceil(nx/2);
+zmax = xmax-xmin;
+nz = nx;
 
 fileID = fopen(['../backup/mesh_info'],'w');
   fprintf(fileID, '%f %f %i %f %f %i',xmin,xmax,nx,zmin,zmax,nz)

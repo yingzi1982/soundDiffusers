@@ -30,8 +30,9 @@ correlationLength = 0.2;
 amplitude = 1/4*correlationLength;
 
 switch topoType
+  case 'none'
   case 'flat'
-  topo = amplitude*zeros(size(x));
+  topo = amplitude*ones(size(x));
   case 'sine'
   topo = amplitude*sin(2*pi/correlationLength*x-pi/4);
   otherwise

@@ -66,8 +66,8 @@ height=`echo "$width*(($ymax)-($ymin))/(($xmax)-($xmin))" | bc -l`
 projection=X$width\i/$height\i
 
 #nx=`grep nx ../backup/Par_file_part | cut -d = -f 2`
-#inc=`echo "($xmax-($xmin))/$nx" | bc -l`
-inc=0.01
+nx=500
+inc=`echo "($xmax-($xmin))/$nx" | bc -l`
 
 #zmin=`gmt gmtinfo $originalxyz -C | awk '{print $9/1000}'`
 #zmax=`gmt gmtinfo $originalxyz -C | awk '{print $10/1000}'`

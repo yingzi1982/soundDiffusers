@@ -32,7 +32,6 @@ echo "topography created"
 echo $step | ./generateSTATIONS.m
 cp ../DATA/STATIONS ../backup
 echo "STATIONS created"
-exit
 
 cd ../bash
 ./createPar_file.sh
@@ -48,15 +47,14 @@ newString='SIMULATION_TYPE                 = 1'
 sed -i "s/$oldString/$newString/g" ../DATA/Par_file
 
 oldString=`grep "^SAVE_FORWARD" ../DATA/Par_file`
-newString='SAVE_FORWARD                    = .true.'
+#newString='SAVE_FORWARD                    = .true.'
+newString='SAVE_FORWARD                    = .false.'
 sed -i "s/$oldString/$newString/g" ../DATA/Par_file
 
 
 oldString=`grep "^NSTEP_BETWEEN_OUTPUT_IMAGES " ../DATA/Par_file`
 newString="NSTEP_BETWEEN_OUTPUT_IMAGES = 1000"
 sed -i "s/$oldString/$newString/g" ../DATA/Par_file
-
-
 
 elif [ $simulationType -eq 3 ];
 then

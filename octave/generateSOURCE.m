@@ -36,6 +36,10 @@ factor                          = [1.d10];
 source = [xs zs];
 save('-ascii','../backup/source','source');
 
+source_polar = [transpose(theta) transpose(radii)];
+save('-ascii','../backup/source_polar','source_polar')
+
+
 case 2
 fid=fopen(['../DATA/STATIONS']);
   c=textscan(fid,'%s %s %f %f %f %f');

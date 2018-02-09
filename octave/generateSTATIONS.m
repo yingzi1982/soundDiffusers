@@ -19,7 +19,7 @@ case 1
 theta_station_step = deg2rad(5);
 theta_station_gap = theta_station_step;
 
-theta_station = [theta_station_gap : theta_station_step : pi-theta_station_gap];
+theta_station = [pi-theta_station_gap : -theta_station_step : theta_station_gap];
 r_station = 5*ones(size(theta_station));
 [xi_station, gamma_station] = pol2cart (theta_station, r_station);
 networkName = 'ARRAY';

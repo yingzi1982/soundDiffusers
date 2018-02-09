@@ -29,13 +29,14 @@ echo "SOURCE created"
 echo $topoType | ./generateTopography.m
 echo "topography created"
 
-cd ../bash
-./createPar_file.sh
-cd ../octave
-
 echo $step | ./generateSTATIONS.m
 cp ../DATA/STATIONS ../backup
 echo "STATIONS created"
+exit
+
+cd ../bash
+./createPar_file.sh
+cd ../octave
 
 #-----------------------------------------------------
 oldString=`grep "^output_wavefield_dumps" ../DATA/Par_file`

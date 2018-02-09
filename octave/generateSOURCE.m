@@ -12,8 +12,8 @@ incidentAngle = input(2);
 [f0Status freq0] = system('grep f0_attenuation ../backup/Par_file_part | cut -d = -f 2');
 freq0 = str2num(freq0);
 
-radii = 5;
-theta = deg2rad(incidentAngle);
+radii = 10;
+theta = deg2rad(90-incidentAngle);
 
 switch step
 

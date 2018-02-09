@@ -22,7 +22,6 @@ rm ../OUTPUT_FILES/wavefield00000*_01.txt
 mv ../OUTPUT_FILES/wavefield*_01.txt $backupfolder
 mv ../OUTPUT_FILES/wavefield_grid_for_dumps.txt $backupfolder
 mv ../OUTPUT_FILES/ARRAY*.semp  $backupfolder
-#cp ../backup/lambda ../backup/source ../backup/receiver ../backup/topoPolygon $backupfolder
 cp ../backup/mesh_info ../backup/source* ../backup/receiver* ../backup/topoPolygon $backupfolder
 
 elif [ $simulationType -eq 3 ];

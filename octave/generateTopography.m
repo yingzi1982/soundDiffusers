@@ -29,17 +29,20 @@ x = transpose([topo_xmin:dx:topo_xmax]);
 correlationLength = 0.2;
 amplitude = 1/4*correlationLength;
 
-switch topoType
-  case 'none'
-  case 'flat'
-  topo = amplitude*ones(size(x));
-  case 'sine'
-  topo = amplitude*sin(2*pi/correlationLength*x-pi/4);
-  otherwise
-  error('Wrong topography type\n')
+if strcmp(topoType,'none')
+  topo = zeros(size(x));
+else
+  switch topoType
+    case 'flat'
+    topo = amplitude*ones(size(x));
+    case 'sine'
+    topo = amplitude*sin(2*pi/correlationLength*x-pi/4);
+    otherwise
+    error('Wrong topography type\n')
+  end
+  topo = (topo - min(topo) + baseThickness);
 end
 
-topo = (topo - min(topo) + baseThickness);
 topo = [x topo];
 
 backTopo = zeros(size(x));

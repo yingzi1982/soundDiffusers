@@ -6,7 +6,7 @@
 #PBS -l nodes=2:ppn=24
 
 #PBS -N specfem2d
-#PBS -A ucd01 #ndear017c #ucd01 #dias01
+#PBS -A dias01 #ndear017c #ucd01 #dias01
 #PBS -j oe
 #PBS -o specfem.log
 ##PBS -e specfem.err
@@ -20,31 +20,28 @@ echo "-------------------------------------------"
 echo "started at `date`"
 echo "--------------------------------------------"
 
-
-#for simulationType in 1 3; do
 for simulationType in 1; do
-for topoType in flat cos; do
-for sourceFrequency in 200 1000 5000; do
-#for topoType in cos; do
-#for sourceFrequency in 1000; do
+#for topoType in flat sine; do
+#for sourceIncidentAngle in 0 30; do
+for topoType in sine; do
+for sourceIncidentAngle in 0; do
 echo ">>>>Simulation type = " $simulationType
 echo ">>>>topo type = " $topoType
-echo ">>>>source frequency = " $sourceFrequency
+echo ">>>>source incident angle = " $sourceIncidentAngle
 
 cd $PBS_O_WORKDIR
 cd ../bash
-./preprocess_adjoint.sh $simulationType $topoType $sourceFrequency
+#./preprocess_adjoint.sh $simulationType $topoType $sourceIncidentAngle
 
 cd ../
 echo running xmeshfem2d
 mpiexec ./xmeshfem2D > ./OUTPUT_FILES/meshfem.log
 echo "--------------------------------------------"
 echo running  specfem2d
-
 mpiexec ./xspecfem2D > ./OUTPUT_FILES/specfem.log
 
 cd ./bash
-./postprocess_adjoint.sh $simulationType $topoType $sourceFrequency
+#./postprocess_adjoint.sh $simulationType $topoType $sourceIncidentAngle
 done
 done
 done

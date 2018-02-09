@@ -62,7 +62,7 @@ projection=X$width\i/$height\i
 region=$xmin/$xmax/$ymin/$ymax
 
 awk -v scale="$scale" '{ print $1/scale, $2/scale }' $topo_polygon | gmt psxy -R$region -J$projection  -Bxa5f2.5+l"Cross range (m) " -Bya5f2.5+l"Range (m)" -Gred -W0.5p -K > $ps #-L+yt -Ggray 
-#awk -v scale="$scale" '{ print $1/scale, $2/scale }' $source   | gmt psxy -R -J -Sa0.05i -Gred  -N -Wthinner,black -O -K >> $ps
+awk -v scale="$scale" '{ print $1/scale, $2/scale }' $source   | gmt psxy -R -J -Sa0.05i -Gred  -N -Wthinner,black -O -K >> $ps
 awk -v scale="$scale" '{ print $1/scale, $2/scale }' $receiver | gmt psxy -R -J -Sc0.02i -Gblue -N -Wthinner,black -O    >> $ps
 
 

@@ -23,8 +23,8 @@ step=1
 echo $step $sourceIncidentAngle | ./generateSOURCE.m
 echo "SOURCE created"
 
-#echo $step | ./generateSOURCE_TIME_FUNCTION.m
-#echo "SOURCE_TIME_FUNCTION created"
+echo $step | ./generateSOURCE_TIME_FUNCTION.m
+echo "SOURCE_TIME_FUNCTION created"
 
 echo $topoType | ./generateTopography.m
 echo "topography created"

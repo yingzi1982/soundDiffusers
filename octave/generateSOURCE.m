@@ -4,7 +4,7 @@ clear all
 close all
 clc
 
-input = input('Please input the step: ','s')
+input = input('Please input the step and incident Angle: ','s')
 input = str2num(input);
 step = input(1);
 incidentAngle = input(2);
@@ -22,7 +22,7 @@ source_surf                     = {'.false.'};
 xs                              = [radii*cos(theta)];
 zs                              = [radii*sin(theta)];
 source_type                     = [1];
-time_function_type              = [1];
+time_function_type              = [8];
 name_of_source_file             = {'SOURCE_FILE'};
 burst_band_width                = [0.0];
 f0                              = [freq0];

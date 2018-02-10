@@ -4,71 +4,50 @@ clear all
 close all
 clc
 
-input = input('Please input the step: ','s')
+input = input('Please input the step: ','s');
 step = str2num(input);
-
-%
 
 switch step
 case 1 % forward simulation
-[nt_status nt] = system('grep ^nt ../backup/Par_file_part | cut -d = -f 2');
-[dt_status dt] = system('grep ^deltat ../backup/Par_file_part | cut -d = -f 2');
-[centralFreqStatus centralFreq] = system('grep f0 ../DATA/SOURCE | cut -d = -f 2');
-[source_typeStatus source_type] = system('grep source_type ../DATA/SOURCE | cut -d = -f 2');
-[p_sv_status p_sv] = system('grep p_sv ../backup/Par_file_part | cut -d = -f 2');
-
-p_sv = strtrim(p_sv);
-source_type=str2num(source_type);
+[nt_status nt] = system('grep ^NSTEP\  ../backup/Par_file_part | cut -d = -f 2');
+[dt_status dt] = system('grep ^DT ../backup/Par_file_part | cut -d = -f 2');
 nt=str2num(nt);
 dt=str2num(dt);
-centralFreq = str2num(centralFreq);
 
-t_number_min = -floor(nt/2);
-t_number_max =  floor(nt/2);
-if t_number_max - t_number_min + 1 != nt
-  error('Please check NSTEP!')
-end
-t = transpose([t_number_min:t_number_max] * dt);
+t = transpose([0:dt:(nt-1)*dt]);
 
-[t_cut s_cut] = ricker(centralFreq, dt);
+f_start = 200;
+f_end = 8000;
+t_cut_duration = 2*1/f_start;
+t_cut = transpose([0:dt:t_cut_duration]);
+nt_cut = length(t_cut);
+
+s_cut = chirp (t_cut, f_start, t_cut_duration, f_end, 'linear', 90);
+
 s = zeros(size(t));
-[t_cut t_cutIndex]=findNearest(t,t_cut);
-s(t_cutIndex) = s_cut;
+s(1:nt_cut) =s_cut;
 
-%band = 0.7;
-%band = 0.5;
-%s = gauspuls(t,centralFreq,band);
+source_signal = [t s];
+[source_file_status source_file] = system('grep ^name_of_source_file ../DATA/SOURCE | cut -d = -f 2');
 
-sourceTimeFunction= [t s];
+save("-ascii",['../DATA/', strtrim(source_file)],'source_signal');
 
-Fs=1/dt;
-S = abs(fftshift(fft(s)));
 
-frequencyEnergy=sum(abs(S).^2)/nt;
+%plot(t_cut,s_cut)
+%plot(t,s)
 
-F = transpose(Fs/2*linspace(-1,1,nt));
-%plot(F, abs(S))
+%Fs=1/dt;
+%S_cut = abs(fftshift(fft(s_cut)));
+
+%frequencyEnergy=sum(abs(S_cut).^2)/nt_cut;
+%F = transpose(Fs/2*linspace(-1,1,nt_cut));
+%plot(F, abs(S_cut))
 %pause(50)
-powerSpectralDensity = [F abs(S)];
-
+%powerSpectralDensity = [F abs(S)];
+%
+sourceTimeFunction= [t_cut s_cut];
 save("-ascii",['../backup/sourceTimeFunction'],'sourceTimeFunction')
-save("-ascii",['../backup/powerSpectralDensity'],'powerSpectralDensity')
-
-
-if(strcmp(p_sv,'.true.'))
-  if (source_type==1)
-  source_time_function_z=s;
-  source_time_function_x=zeros(size(s));
-  [source_time_function_angle source_time_function_amplitude]=cart2pol(source_time_function_x,source_time_function_z);
-  elseif (source_type==2) 
-    source_time_function_amplitude = cumsum(s);
-    source_time_function_angle = zeros(size(source_time_function_amplitude));
-  end
-elseif (strcmp(p_sv,'.false.'))
-  source_time_function_amplitude = s;
-  source_time_function_angle = zeros(size(source_time_function_amplitude));
-end
-
+%
 case 2 % backward simulation
 [p_sv_status p_sv] = system('grep p_sv ../backup/Par_file_part | cut -d = -f 2');
 p_sv = strtrim(p_sv);
@@ -118,5 +97,3 @@ otherwise
 error('Wrong step type.')
 end
 
-save("-ascii",['../DATA/SOURCE_TIME_FUNCTION_ANGLE']  ,'source_time_function_angle')
-save("-ascii",['../DATA/SOURCE_TIME_FUNCTION_AMPLITUDE']  ,'source_time_function_amplitude')

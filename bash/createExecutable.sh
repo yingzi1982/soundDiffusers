@@ -13,7 +13,7 @@ cd ../../../
 cd $currentdir
 #cp -f ../fortran/constants.h ../../../setup/
 #cp -f ../fortran/specfem2D.F90 ../../../src/specfem2D/
-#cp -f ../fortran/prepare_source_time_function.f90 ../../../src/specfem2D/
+cp -f ../fortran/prepare_source_time_function.f90 ../../../src/specfem2D/
 #echo "configured and initialized" 
 
 # make
@@ -36,4 +36,4 @@ echo "linked xmeshfem2D"
 cp -f ../../bin/xspecfem2D ./
 echo "linked xspecfem2D"
 
-module unload dev intel/2017-u3
+module unload dev intel/2013-sp1-u3

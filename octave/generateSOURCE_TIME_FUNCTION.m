@@ -20,17 +20,27 @@ f_start = 200;
 f_end = 8000;
 t_cut_duration = 2*1/f_start;
 t_cut = transpose([0:dt:t_cut_duration]);
-nt_cut = length(t_cut);
 
 s_cut = chirp (t_cut, f_start, t_cut_duration, f_end, 'linear', 90);
 
+sourceTimeFunction= [t_cut s_cut];
+save("-ascii",['../backup/sourceTimeFunction'],'sourceTimeFunction')
+
+[USE_TRICK_FOR_BETTER_PRESSURE_status USE_TRICK_FOR_BETTER_PRESSURE] = ...
+system('grep ^USE_TRICK_FOR_BETTER_PRESSURE ../backup/Par_file_part | cut -d = -f 2');
+if strcmp(strtrim(USE_TRICK_FOR_BETTER_PRESSURE),'.true.')
+  s_cut = diff(s_cut,2);
+end
+
+s_cut = s_cut/max(s_cut);
+
 s = zeros(size(t));
-s(1:nt_cut) =s_cut;
+s(1:length(s_cut)) =s_cut;
 
 source_signal = [t s];
 [source_file_status source_file] = system('grep ^name_of_source_file ../DATA/SOURCE | cut -d = -f 2');
 
-save("-ascii",['../DATA/', strtrim(source_file)],'source_signal');
+save("-ascii",['../', strtrim(source_file)],'source_signal');
 
 
 %plot(t_cut,s_cut)
@@ -45,8 +55,6 @@ save("-ascii",['../DATA/', strtrim(source_file)],'source_signal');
 %pause(50)
 %powerSpectralDensity = [F abs(S)];
 %
-sourceTimeFunction= [t_cut s_cut];
-save("-ascii",['../backup/sourceTimeFunction'],'sourceTimeFunction')
 %
 case 2 % backward simulation
 [p_sv_status p_sv] = system('grep p_sv ../backup/Par_file_part | cut -d = -f 2');

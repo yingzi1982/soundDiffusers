@@ -2,7 +2,7 @@
 
 #PBS -V
 #PBS -r n
-#PBS -l walltime=5:00:00
+#PBS -l walltime=6:00:00
 #PBS -l nodes=2:ppn=24
 
 #PBS -N specfem2d
@@ -35,10 +35,10 @@ cd ../bash
 
 cd ../
 echo running xmeshfem2d
-mpiexec ./xmeshfem2D > ./OUTPUT_FILES/meshfem.log
+mpirun ./xmeshfem2D > ./OUTPUT_FILES/meshfem.log
 echo "--------------------------------------------"
 echo running  specfem2d
-mpiexec ./xspecfem2D > ./OUTPUT_FILES/specfem.log
+mpirun ./xspecfem2D > ./OUTPUT_FILES/specfem.log
 
 cd ./bash
 #./postprocess_adjoint.sh $simulationType $topoType $sourceIncidentAngle

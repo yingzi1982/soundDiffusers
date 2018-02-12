@@ -19,7 +19,7 @@ xNumber = nx + 1;
 
 dx = (xmax - xmin)/nx;
 dz = dx;
-nz_offset = 2*NELEM_PML_THICKNESS;
+nz_offset = 4*NELEM_PML_THICKNESS;
 nz = nx+nz_offset;
 
 x=linspace(xmin,xmax,xNumber);

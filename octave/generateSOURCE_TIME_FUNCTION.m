@@ -23,7 +23,7 @@ t_cut = transpose([0:dt:t_cut_duration]);
 %-----------------------
 %s_cut = chirp (t_cut, f_start, t_cut_duration, f_end, 'linear', 90);
 fc=2000;
-[t_cut, s_cut] = ricker(fc, dt)
+[t_cut, s_cut] = ricker(fc, dt);
 %-----------------------
 
 sourceTimeFunction= [t_cut s_cut];

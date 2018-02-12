@@ -3,7 +3,7 @@
 #ICHEC#	For more information see: https://www.ichec.ie/infrastructure/software/Intel_MPI
 #ICHEC#	 mpiexec is not supported anymore use mpirun instead... 
 -------------------------------------------
-started at sön feb 11 20:04:30 GMT 2018
+started at mån feb 12 07:45:02 GMT 2018
 --------------------------------------------
 >>>>Simulation type =  1
 >>>>topo type =  sine
@@ -11,7 +11,52 @@ started at sön feb 11 20:04:30 GMT 2018
 running xmeshfem2d
 --------------------------------------------
 running specfem2d
-[mpiexec@r2i4n3] control_cb (./pm/pmiserv/pmiserv_cb.c:717): assert (!closed) failed
-[mpiexec@r2i4n3] HYDT_dmxu_poll_wait_for_event (./tools/demux/demux_poll.c:77): callback returned error status
-[mpiexec@r2i4n3] HYD_pmci_wait_for_completion (./pm/pmiserv/pmiserv_pmci.c:435): error waiting for event
-[mpiexec@r2i4n3] main (./ui/mpich/mpiexec.c:901): process manager error waiting for completion
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 11
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 0
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 8
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 6
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 7
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 34
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 4
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 27
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 31
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 1
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 2
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 26
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 33
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 5
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 24
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 9
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 35
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 10
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 3
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 39
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 22
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 45
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 13
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 42
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 36
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 14
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 37
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 15
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 47
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 19
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 20
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 41
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 40
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 17
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 38
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 16
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 46
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 23
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 30
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 44
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 18
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 32
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 21
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 12
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 28
+application called MPI_Abort(MPI_COMM_WORLD, 30) - process 29
+-------------------------------------------
+finished at mån feb 12 07:46:23 GMT 2018
+--------------------------------------------

@@ -38,6 +38,11 @@ cd ../bash
 cd ../octave
 
 #-----------------------------------------------------
+
+oldString=`grep "^NSTEP_BETWEEN_OUTPUT_IMAGES " ../DATA/Par_file`
+newString="NSTEP_BETWEEN_OUTPUT_IMAGES = 1000"
+sed -i "s/$oldString/$newString/g" ../DATA/Par_file
+
 oldString=`grep "^output_wavefield_dumps" ../DATA/Par_file`
 newString='output_wavefield_dumps          = .true.'
 sed -i "s/$oldString/$newString/g" ../DATA/Par_file
@@ -51,10 +56,29 @@ oldString=`grep "^SAVE_FORWARD" ../DATA/Par_file`
 newString='SAVE_FORWARD                    = .false.'
 sed -i "s/$oldString/$newString/g" ../DATA/Par_file
 
+#--------------------------------------------------------
 
-oldString=`grep "^NSTEP_BETWEEN_OUTPUT_IMAGES " ../DATA/Par_file`
-newString="NSTEP_BETWEEN_OUTPUT_IMAGES = 1000"
-sed -i "s/$oldString/$newString/g" ../DATA/Par_file
+runningFolder=../running/$topoType\_$sourceIncidentAngle
+rm -r $runningFolder
+mkdir $runningFolder
+runningOUTPUT_FILESFolder=$runningFolder/OUTPUT_FILES/
+mkdir $runningOUTPUT_FILESFolder
+runningBackupFolder=$runningFolder/backup/
+mkdir $runningBackupFolder
+cp ../backup/sourceTimeFunction ../backup/mesh_info ../backup/source_polar ../backup/source ../backup/receiver ../backup/receiver_polar ../backup/TOMO.xyz  ../backup/topoPolygon $runningBackupFolder
+cp -r ../xmeshfem2D ../xspecfem2D ../DATA/ $runningFolder
+pbsFile=run.pbs
+runningPbsFolder=$runningFolder/pbs/
+mkdir $runningPbsFolder
+cp ../pbs/$pbsFile $runningPbsFolder
+cd $runningPbsFolder
+
+oldString=`grep "^#PBS -N" $pbsFile`
+newString="#PBS -N specfem2d_$topoType\_$sourceIncidentAngle"
+sed -i "s/$oldString/$newString/g" $pbsFile
+
+qsub $pbsFile
+#--------------------------------------------------------
 
 elif [ $simulationType -eq 3 ];
 then

@@ -26,16 +26,15 @@ echo "SOURCE created"
 echo $step | ./generateSOURCE_TIME_FUNCTION.m
 echo "SOURCE_TIME_FUNCTION created"
 
-echo $topoType | ./generateTopography.m
-echo "topography created"
-
 echo $step | ./generateSTATIONS.m
 cp ../DATA/STATIONS ../backup
 echo "STATIONS created"
 
+echo $topoType | ./generateTopography.m
+echo "topography created"
+
 cd ../bash
 ./createPar_file.sh
-cd ../octave
 
 #-----------------------------------------------------
 

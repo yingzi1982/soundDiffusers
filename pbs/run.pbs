@@ -20,17 +20,8 @@ echo "-------------------------------------------"
 echo "started at `date`"
 echo "--------------------------------------------"
 
-for simulationType in 1; do
-#for topoType in flat sine; do
-#for sourceIncidentAngle in 0 30; do
-for topoType in sine; do
-for sourceIncidentAngle in 0; do
-echo ">>>>Simulation type = " $simulationType
-echo ">>>>topo type = " $topoType
-echo ">>>>source incident angle = " $sourceIncidentAngle
-
 cd $PBS_O_WORKDIR
-cd ../bash
+#cd ../bash
 #./preprocess_adjoint.sh $simulationType $topoType $sourceIncidentAngle
 
 cd ../
@@ -40,12 +31,8 @@ echo "--------------------------------------------"
 echo running  specfem2d
 mpirun ./xspecfem2D > ./OUTPUT_FILES/specfem.log
 
-cd ./bash
+#cd ./bash
 #./postprocess_adjoint.sh $simulationType $topoType $sourceIncidentAngle
-done
-done
-done
-
 echo "-------------------------------------------"
 echo "finished at `date`"
 echo "--------------------------------------------"

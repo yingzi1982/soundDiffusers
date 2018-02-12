@@ -17,11 +17,14 @@ dt=str2num(dt);
 t = transpose([0:dt:(nt-1)*dt]);
 
 f_start = 200;
-f_end = 8000;
+f_end = 10000;
 t_cut_duration = 2*1/f_start;
 t_cut = transpose([0:dt:t_cut_duration]);
-
-s_cut = chirp (t_cut, f_start, t_cut_duration, f_end, 'linear', 90);
+%-----------------------
+%s_cut = chirp (t_cut, f_start, t_cut_duration, f_end, 'linear', 90);
+fc=2000;
+[t_cut, s_cut] = ricker(fc, dt)
+%-----------------------
 
 sourceTimeFunction= [t_cut s_cut];
 save("-ascii",['../backup/sourceTimeFunction'],'sourceTimeFunction')

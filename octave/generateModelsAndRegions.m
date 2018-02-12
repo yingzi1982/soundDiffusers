@@ -16,13 +16,6 @@ zmax = mesh_info(5);
 dx = (xmax - xmin)/nx;
 dz = (zmax - zmin)/nz;
 
-[NELEM_PML_THICKNESSStatus NELEM_PML_THICKNESS] = system('grep NELEM_PML_THICKNESS ../backup/Par_file_part | cut -d = -f 2');
-NELEM_PML_THICKNESS = str2num(NELEM_PML_THICKNESS);
-
-[PML_conditionsStatus PML_conditions] = system('grep ^PML_BOUNDARY_CONDITIONS ../backup/Par_file_part | cut -d = -f 2');
-quasi_gypsum_length_x = dx*(NELEM_PML_THICKNESS+1);
-quasi_gypsum_length_z = dz*(NELEM_PML_THICKNESS+1);
-
 %[f0Status f0] = system('grep f0 ../DATA/SOURCE | cut -d = -f 2');
 %f0 = str2num(f0);
 
@@ -34,8 +27,7 @@ quasi_gypsum_length_z = dz*(NELEM_PML_THICKNESS+1);
 
 airModel    =    [1 1   1.2  343.0  0.00   0 0 9999 9999 0 0 0 0 0 0];
 gypsumModel =    [2 1 800.0 1700.0  980.00 0 0 9999 9999 0 0 0 0 0 0];
-gypsumPMLModel = [3 1 800.0 1700.0  0.00   0 0 9999 9999 0 0 0 0 0 0];
-models = [airModel;gypsumModel;gypsumPMLModel];
+models = [airModel;gypsumModel];
 nbmodels = rows(models);
 
 fileID = fopen(['../backup/models'],'w');
@@ -47,7 +39,7 @@ for nmodel = [1:nbmodels]
   fprintf(fileID, '%i %i %f %f %f %i %i %i %i %i %i %i %i %i %i \n', ...
   models(nmodel,1),  models(nmodel,2),  models(nmodel,3),  models(nmodel,4),  models(nmodel,5),...
   models(nmodel,6),  models(nmodel,7),  models(nmodel,8),  models(nmodel,9),  models(nmodel,10),...
- models(nmodel,11), models(nmodel,12), models(nmodel,13), models(nmodel,14), models(nmodel,15))
+  models(nmodel,11), models(nmodel,12), models(nmodel,13), models(nmodel,14), models(nmodel,15))
 end       
 fprintf(fileID, '\n')
 fclose(fileID);
@@ -75,16 +67,8 @@ gypsum_region_indices = find( spatial_sampling(:,1) >= topo_xmin &...
                               spatial_sampling(:,2) <= topo(topo_spatial_sampling_x_index,2) & ...
                               spatial_sampling(:,2) > backTopo(backTopo_spatial_sampling_x_index,2));
 
-quasi_gypsum_region_indices = gypsum_region_indices(find(spatial_sampling(gypsum_region_indices,1) <= xmin+quasi_gypsum_length_x |...
-			                                 spatial_sampling(gypsum_region_indices,1) >= xmax-quasi_gypsum_length_x |...
-                                                         spatial_sampling(gypsum_region_indices,2) <= zmin+quasi_gypsum_length_z |...
-                                                         spatial_sampling(gypsum_region_indices,2) >= zmax-quasi_gypsum_length_z));
-
 regions(:,5) = 1;
 regions(gypsum_region_indices,5) = 2;
-if strcmp (strtrim(PML_conditions), '.true.')
-   regions(quasi_gypsum_region_indices,5) = 3;
-end
 
 for iz = [1:nz]
   for ix = [1:nx]

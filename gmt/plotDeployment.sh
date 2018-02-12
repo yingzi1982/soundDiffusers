@@ -52,8 +52,8 @@ pdf=$figfolder$name.pdf
 
 xmin=`awk -v scale="$scale" '{print $1/scale}' ../backup/mesh_info`
 xmax=`awk -v scale="$scale" '{print $2/scale}' ../backup/mesh_info`
-#ymin=`awk -v scale="$scale" '{print $4/scale}' ../backup/mesh_info`
-ymin=0
+ymin=`awk -v scale="$scale" '{print $4/scale}' ../backup/mesh_info`
+#ymin=0
 ymax=`awk -v scale="$scale" '{print $5/scale}' ../backup/mesh_info`
 
 width=2.2

@@ -1,8 +1,8 @@
 # GMT 5 Session common arguments shelf
 BEGIN GMT 5.1.0
-B	xa500f250y+lm/s
+B	xa5f2.5+lCross range (m) ya5f2.5+lRange (m)
 J	X
 JX	X2.2i/2.24000000000000000000i
-R	-5.500000/5.500000/-0.200000/11.000000
-L	2
+R	-5.5/5.5/-0.2/11
+L	3
 END

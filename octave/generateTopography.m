@@ -15,7 +15,7 @@ dx = (xmax-xmin)/nx;
 [NELEM_PML_THICKNESSStatus NELEM_PML_THICKNESS] = system('grep NELEM_PML_THICKNESS ../backup/Par_file_part | cut -d = -f 2');
 NELEM_PML_THICKNESS = str2num(NELEM_PML_THICKNESS);
 
-baseThickness = 1*NELEM_PML_THICKNESS*dx;
+baseThickness = 2*NELEM_PML_THICKNESS*dx;
 
 %win = [zeros(2*NELEM_PML_THICKNESS,1); transpose(welchwin(xNumber - 4*NELEM_PML_THICKNESS)); zeros(2*NELEM_PML_THICKNESS,1)];
 

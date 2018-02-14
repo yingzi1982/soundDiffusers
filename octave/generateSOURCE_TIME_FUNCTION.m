@@ -1,4 +1,5 @@
 #!/usr/bin/env octave
+% input the secondary derivative of the source time function and record fluid potential as pressure to eliminate numerical ripple
 
 clear all
 close all
@@ -17,23 +18,17 @@ dt=str2num(dt);
 t = transpose([0:dt:(nt-1)*dt]);
 
 f_start = 200;
-f_end = 10000;
+f_end = 5000;
 t_cut_duration = 2*1/f_start;
 t_cut = transpose([0:dt:t_cut_duration]);
 %-----------------------
-%s_cut = chirp (t_cut, f_start, t_cut_duration, f_end, 'linear', 90);
-fc=2000;
-[t_cut, s_cut] = ricker(fc, dt);
+s_cut = chirp (t_cut, f_start, t_cut_duration, f_end, 'linear', 90);
 %-----------------------
 
 sourceTimeFunction= [t_cut s_cut];
 save("-ascii",['../backup/sourceTimeFunction'],'sourceTimeFunction')
 
-[USE_TRICK_FOR_BETTER_PRESSURE_status USE_TRICK_FOR_BETTER_PRESSURE] = ...
-system('grep ^USE_TRICK_FOR_BETTER_PRESSURE ../backup/Par_file_part | cut -d = -f 2');
-if strcmp(strtrim(USE_TRICK_FOR_BETTER_PRESSURE),'.true.')
-  s_cut = diff(s_cut,2);
-end
+s_cut = -diff(s_cut,2);
 
 s_cut = s_cut/max(s_cut);
 

@@ -40,12 +40,12 @@ else
     otherwise
     error('Wrong topography type\n')
   end
-  topo = (topo - min(topo) + baseThickness);
+  topo = (topo - min(topo));
 end
 
 topo = [x topo];
 
-backTopo = zeros(size(x));
+backTopo = -baseThickness*ones(size(x));
 backTopo = [x backTopo];
 
 save('-ascii','../backup/topo','topo')

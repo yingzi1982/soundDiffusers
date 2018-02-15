@@ -29,24 +29,24 @@ x = transpose([topo_xmin:dx:topo_xmax]);
 correlationLength = 0.2;
 amplitude = 1/4*correlationLength;
 
-if strcmp(topoType,'none')
-  topo = zeros(size(x));
-else
-  switch topoType
-    case 'flat'
-    topo = amplitude*ones(size(x));
-    case 'sine'
-    topo = amplitude*sin(2*pi/correlationLength*x-pi/4);
-    otherwise
-    error('Wrong topography type\n')
-  end
-  topo = (topo - min(topo));
+switch topoType
+case 'flat'
+topo = amplitude*ones(size(x));
+case 'sine'
+topo = amplitude*sin(2*pi/correlationLength*x-pi/4);
+otherwise
+error('Wrong topography type\n')
 end
+topo = (topo - min(topo));
 
 topo = [x topo];
 
 backTopo = -baseThickness*ones(size(x));
 backTopo = [x backTopo];
+
+if strcmp(topoType,'none')
+topo = backTopo;
+end
 
 save('-ascii','../backup/topo','topo')
 save('-ascii','../backup/backTopo','backTopo')

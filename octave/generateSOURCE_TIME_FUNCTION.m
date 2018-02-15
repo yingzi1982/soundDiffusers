@@ -25,17 +25,15 @@ t_cut = transpose([0:dt:t_cut_duration]);
 s_cut = chirp (t_cut, f_start, t_cut_duration, f_end, 'linear', 90);
 %-----------------------
 
+s_cut = s_cut/max(s_cut);
+
 sourceTimeFunction= [t_cut s_cut];
 save("-ascii",['../backup/sourceTimeFunction'],'sourceTimeFunction')
-
-s_cut = -diff(s_cut,2);
-
-s_cut = s_cut/max(s_cut);
 
 s = zeros(size(t));
 s(1:length(s_cut)) =s_cut;
 
-source_signal = [t s];
+source_signal = [t -s];
 [source_file_status source_file] = system('grep ^name_of_source_file ../DATA/SOURCE | cut -d = -f 2');
 
 save("-ascii",['../', strtrim(source_file)],'source_signal');

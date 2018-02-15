@@ -32,15 +32,13 @@ echo "STATIONS created"
 
 echo $topoType | ./generateTopography.m
 echo "topography created"
-exit
 
 cd ../bash
-./createPar_file.sh
-
+#./createPar_file.sh
 #-----------------------------------------------------
 
 oldString=`grep "^NSTEP_BETWEEN_OUTPUT_IMAGES " ../DATA/Par_file`
-newString="NSTEP_BETWEEN_OUTPUT_IMAGES = 1000"
+newString='NSTEP_BETWEEN_OUTPUT_IMAGES = 1000'
 sed -i "s/$oldString/$newString/g" ../DATA/Par_file
 
 oldString=`grep "^output_wavefield_dumps" ../DATA/Par_file`
@@ -52,12 +50,10 @@ newString='SIMULATION_TYPE                 = 1'
 sed -i "s/$oldString/$newString/g" ../DATA/Par_file
 
 oldString=`grep "^SAVE_FORWARD" ../DATA/Par_file`
-#newString='SAVE_FORWARD                    = .true.'
 newString='SAVE_FORWARD                    = .false.'
 sed -i "s/$oldString/$newString/g" ../DATA/Par_file
 
 #--------------------------------------------------------
-
 runningFolder=../running/$topoType\_$sourceIncidentAngle
 rm -r $runningFolder
 mkdir $runningFolder

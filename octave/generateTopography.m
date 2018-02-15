@@ -32,21 +32,20 @@ amplitude = 1/4*correlationLength;
 switch topoType
 case 'flat'
 topo = amplitude*ones(size(x));
+topo = topo - min(topo);
 case 'sine'
 topo = amplitude*sin(2*pi/correlationLength*x-pi/4);
+topo = topo - min(topo);
+case 'none'
+topo = -baseThickness*ones(size(x));
 otherwise
 error('Wrong topography type\n')
 end
-topo = (topo - min(topo));
 
 topo = [x topo];
 
 backTopo = -baseThickness*ones(size(x));
 backTopo = [x backTopo];
-
-if strcmp(topoType,'none')
-topo = backTopo;
-end
 
 save('-ascii','../backup/topo','topo')
 save('-ascii','../backup/backTopo','backTopo')

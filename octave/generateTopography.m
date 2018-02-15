@@ -34,7 +34,14 @@ case 'flat'
 topo = amplitude*ones(size(x));
 topo = topo - min(topo);
 case 'sine'
-topo = amplitude*sin(2*pi/correlationLength*x-pi/4);
+period = correlationLength;
+topo = amplitude*sin(2*pi/period*x-pi/4);
+topo = topo - min(topo);
+case 'skyline'
+width = correlationLength/2
+x_sparse = [topo_xmin:width:topo_xmax];
+topo_sparse = width*randi([0,4],size(x_sparse));
+topo = interp1(x_sparse,topo_sparse,x,'left');
 topo = topo - min(topo);
 case 'none'
 topo = -baseThickness*ones(size(x));

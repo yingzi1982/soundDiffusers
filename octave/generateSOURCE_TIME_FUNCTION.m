@@ -17,37 +17,48 @@ dt=str2num(dt);
 
 t = transpose([0:dt:(nt-1)*dt]);
 
-f_start = 200;
-f_end = 5000;
-t_cut_duration = 2*1/f_start;
+f_start = 100;
+f_end = 10000;
+t_cut_duration = 0.02;
 t_cut = transpose([0:dt:t_cut_duration]);
 %-----------------------
 s_cut = chirp (t_cut, f_start, t_cut_duration, f_end, 'linear', 90);
+s_cut = s_cut.*hanning(length(s_cut));
+s_cut = s_cut/max(s_cut);
 %-----------------------
 
-s_cut = s_cut/max(s_cut);
 
 sourceTimeFunction= [t_cut s_cut];
 save("-ascii",['../backup/sourceTimeFunction'],'sourceTimeFunction')
 
 s = zeros(size(t));
 s(1:length(s_cut)) =s_cut;
+%figure
+%plot(t,s)
 
 source_signal = [t -s];
 [source_file_status source_file] = system('grep ^name_of_source_file ../DATA/SOURCE | cut -d = -f 2');
 
 save("-ascii",['../', strtrim(source_file)],'source_signal');
 
-
+%figure
 %plot(t_cut,s_cut)
-%plot(t,s)
+L = length(t_cut);
+nfft = 2^nextpow2(L);
+S_cut = fft(s_cut,nfft);
 
-%Fs=1/dt;
-%S_cut = abs(fftshift(fft(s_cut)));
+Fs=1/dt;
+f = transpose(Fs*(0:(nfft/2))/nfft);
+P_cut = abs(S_cut/nfft);
+sourceFrequencySpetrum =[f,P_cut(1:nfft/2+1)];
+save("-ascii",['../backup/sourceFrequencySpetrum'],'sourceFrequencySpetrum')
 
-%frequencyEnergy=sum(abs(S_cut).^2)/nt_cut;
-%F = transpose(Fs/2*linspace(-1,1,nt_cut));
-%plot(F, abs(S_cut))
+%figure
+%plot(f,P_cut(1:nfft/2+1)) 
+%xlim([0,10000])
+
+%plot(f, P_cut)
+%xlim([-1000,1000])
 %pause(50)
 %powerSpectralDensity = [F abs(S)];
 %

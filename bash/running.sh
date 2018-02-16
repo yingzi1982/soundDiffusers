@@ -9,7 +9,7 @@ runningOUTPUT_FILESFolder=$runningFolder/OUTPUT_FILES/
 mkdir $runningOUTPUT_FILESFolder
 runningBackupFolder=$runningFolder/backup/
 mkdir $runningBackupFolder
-cp ../backup/sourceTimeFunction ../backup/mesh_info ../backup/source_polar ../backup/source ../backup/receiver ../backup/receiver_polar ../backup/TOMO.xyz  ../backup/topoPolygon $runningBackupFolder
+cp ../backup/sourceTimeFunction ../backup/sourceFrequencySpetrum ../backup/mesh_info ../backup/source_polar ../backup/source ../backup/receiver ../backup/receiver_polar ../backup/TOMO.xyz  ../backup/topoPolygon $runningBackupFolder
 cp -r ../xmeshfem2D ../xspecfem2D ../DATA/ $runningFolder
 pbsFile=run.pbs
 runningPbsFolder=$runningFolder/pbs/

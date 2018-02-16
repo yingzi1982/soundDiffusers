@@ -15,6 +15,6 @@ git commit -m "pushing $folder"
 git push origin master
 elif [ $operation == 'pull' ]
 then
-echo "pull from repo"
+git commit -m "pulling"
 git pull origin master
 fi

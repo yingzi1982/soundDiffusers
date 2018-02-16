@@ -6,7 +6,7 @@ module load dev git/intel/2.2.1
 
 operation=$1
 #folder=$2
-folder="../bash ../figures ../fortran ../gmt ../gnuplot ../latex ../octave ../pbs"
+folder="../bash/*sh ../figures ../fortran ../gmt/*sh ../latex ../octave/*m ../pbs/*pbs"
 
 if [ $operation == 'push' ]
 then

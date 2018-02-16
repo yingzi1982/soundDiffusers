@@ -38,9 +38,10 @@ period = correlationLength;
 topo = amplitude*sin(2*pi/period*x-pi/4);
 topo = topo - min(topo);
 case 'skyline'
-width = correlationLength/2;
-x_sparse = [topo_xmin:width:topo_xmax];
-topo_sparse = width*randi([0,4],size(x_sparse));
+elementNumber=20;
+x_sparse = linspace(topo_xmin,topo_xmax,elementNumber+1);
+elementSpacing=(topo_xmax - topo_xmin)/elementNumber;
+topo_sparse = [1 0 3 4 1 2 4 1 2 0 1 3 1 2 1 0 3 1 4 3 2];
 topo = interp1(x_sparse,topo_sparse,x,'nearest');
 topo = topo - min(topo);
 case 'none'

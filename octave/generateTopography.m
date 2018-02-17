@@ -39,6 +39,7 @@ x_sparse = transpose(topo_xmin:width:topo_xmax);
 topo_sparse = height*ones(size(x_sparse));
 topo_sparse(1:2:end) = 0;
 topo = interp1(x_sparse,topo_sparse,x,'linear');
+topo = topo - min(topo);
 case 'rectangle'
 width=0.05;
 height=0.1;
@@ -46,6 +47,7 @@ x_sparse = transpose(topo_xmin:width:topo_xmax);
 topo_sparse = height*ones(size(x_sparse));
 topo_sparse(1:2:end) = 0;
 topo = interp1(x_sparse,topo_sparse,x,'nearest');
+topo = topo - min(topo);
 case 'sine'
 amplitude = 0.05;
 period = 0.2;

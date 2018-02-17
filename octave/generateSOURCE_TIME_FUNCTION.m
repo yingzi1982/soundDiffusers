@@ -17,8 +17,8 @@ dt=str2num(dt);
 
 t = transpose([0:dt:(nt-1)*dt]);
 
-f_start = 100;
-f_end = 10000;
+f_start = 20;
+f_end = 20000;
 t_cut_duration = 0.02;
 t_cut = transpose([0:dt:t_cut_duration]);
 %-----------------------
@@ -55,14 +55,8 @@ save("-ascii",['../backup/sourceFrequencySpetrum'],'sourceFrequencySpetrum')
 
 %figure
 %plot(f,P_cut(1:nfft/2+1)) 
-%xlim([0,10000])
+%xlim([0,20000])
 
-%plot(f, P_cut)
-%xlim([-1000,1000])
-%pause(50)
-%powerSpectralDensity = [F abs(S)];
-%
-%
 case 2 % backward simulation
 [p_sv_status p_sv] = system('grep p_sv ../backup/Par_file_part | cut -d = -f 2');
 p_sv = strtrim(p_sv);

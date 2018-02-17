@@ -34,7 +34,7 @@ echo $topoType | ./generateTopography.m
 echo "topography created"
 
 cd ../bash
-./createPar_file.sh
+#./createPar_file.sh
 #-----------------------------------------------------
 
 oldString=`grep "^NSTEP_BETWEEN_OUTPUT_IMAGES " ../DATA/Par_file`

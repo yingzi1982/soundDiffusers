@@ -48,7 +48,7 @@ topo_sparse(1:2:end) = 0;
 topo = interp1(x_sparse,topo_sparse,x,'nearest');
 case 'sine'
 amplitude = 0.05;
-period = 0.2;
+period = 0.1;
 topo = amplitude*sin(2*pi/period*x-pi/4);
 topo = topo - min(topo);
 case 'skyline'

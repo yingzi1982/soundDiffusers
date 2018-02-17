@@ -34,14 +34,14 @@ topo = zeros(size(x));
 topo = topo - min(topo);
 case 'triangle'
 width=0.05;
-height=0.2;
+height=0.1;
 x_sparse = transpose(topo_xmin:width:topo_xmax);
 topo_sparse = height*ones(size(x_sparse));
 topo_sparse(1:2:end) = 0;
 topo = interp1(x_sparse,topo_sparse,x,'linear');
 case 'rectangle'
 width=0.05;
-height=0.2;
+height=0.1;
 x_sparse = transpose(topo_xmin:width:topo_xmax);
 topo_sparse = height*ones(size(x_sparse));
 topo_sparse(1:2:end) = 0;

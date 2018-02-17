@@ -27,21 +27,29 @@ x = transpose([topo_xmin:dx:topo_xmax]);
 
 
 correlationLength = 0.2;
-amplitude = 1/4*correlationLength;
 
 switch topoType
 case 'flat'
-topo = amplitude*ones(size(x));
+topo = zeros(size(x));
 topo = topo - min(topo);
+case 'triangle'
+width=0.05;
+height=0.2;
+x_sparse = transpose(topo_xmin:width:topo_xmax);
+topo_sparse = height*ones(size(x_sparse));
+topo_sparse(1:2:end) = 0;
+topo = interp1(x_sparse,topo_sparse,x,'linear');
+case 'rectangle'
 case 'sine'
-period = correlationLength;
+amplitude = 0.05;
+period = 0.2;
 topo = amplitude*sin(2*pi/period*x-pi/4);
 topo = topo - min(topo);
 case 'skyline'
-elementWidth=0.05;
-x_sparse = transpose(topo_xmin:elementWidth:topo_xmax);
+width=0.05;
+x_sparse = transpose(topo_xmin:width:topo_xmax);
 rand('seed',18)
-topo_sparse = elementWidth*randi([0,4],size(x_sparse));
+topo_sparse = width*randi([0,4],size(x_sparse));
 topo = interp1(x_sparse,topo_sparse,x,'nearest');
 topo = topo - min(topo);
 case 'none'

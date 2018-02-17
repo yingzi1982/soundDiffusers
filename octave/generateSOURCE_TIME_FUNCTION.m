@@ -41,8 +41,8 @@ source_signal = [t -s];
 
 save("-ascii",['../', strtrim(source_file)],'source_signal');
 
-figure
-plot(t_cut,s_cut)
+%figure
+%plot(t_cut,s_cut)
 L = length(t_cut);
 nfft = 2^nextpow2(L);
 S_cut = fft(s_cut,nfft);
@@ -53,9 +53,9 @@ P_cut = abs(S_cut/nfft);
 sourceFrequencySpetrum =[f,P_cut(1:nfft/2+1)];
 save("-ascii",['../backup/sourceFrequencySpetrum'],'sourceFrequencySpetrum')
 
-figure
-plot(f,P_cut(1:nfft/2+1)) 
-xlim([0,20000])
+%figure
+%plot(f,P_cut(1:nfft/2+1)) 
+%xlim([0,20000])
 
 case 2 % backward simulation
 [p_sv_status p_sv] = system('grep p_sv ../backup/Par_file_part | cut -d = -f 2');

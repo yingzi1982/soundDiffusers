@@ -26,14 +26,15 @@ length = topo_xmax - topo_xmin;
 x = transpose([topo_xmin:dx:topo_xmax]);
 
 
-correlationLength = 0.2;
 
 switch topoType
+case 'none'
+topo = -baseThickness*ones(size(x));
 case 'flat'
 topo = zeros(size(x));
 topo = topo - min(topo);
 case 'triangle'
-width=0.05;
+width=0.1;
 height=0.1;
 x_sparse = transpose(topo_xmin:width:topo_xmax);
 topo_sparse = height*ones(size(x_sparse));
@@ -56,12 +57,16 @@ topo = topo - min(topo);
 case 'skyline'
 width=0.05;
 x_sparse = transpose(topo_xmin:width:topo_xmax);
+seed=18
 rand('seed',18)
 topo_sparse = width*randi([0,4],size(x_sparse));
 topo = interp1(x_sparse,topo_sparse,x,'nearest');
 topo = topo - min(topo);
-case 'none'
-topo = -baseThickness*ones(size(x));
+case {'gauss','exp', 'von'}
+seed=18;
+correlationLength = 0.1; meanVal=0;stdVal=0.02;
+topo=randomField1D(topoType,seed,x,correlationLength,meanVal,stdVal);
+topo = topo - min(topo);
 otherwise
 error('Wrong topography type\n')
 end

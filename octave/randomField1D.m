@@ -1,7 +1,7 @@
 #!/ichec/packages/octave/3.6.3/octave-3.6.3_build/bin/octave
 function [randomField]=randomField1D(tomoType,seed,x,correlationLength,meanVal,stdVal,hurstNumber)
 if nargin==6
-  hurstNumber = 0.2;
+  hurstNumber = 0.1;
 end
 
 [nx ] = length(x);

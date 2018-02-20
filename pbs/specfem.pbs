@@ -3,7 +3,7 @@
 #PBS -V
 #PBS -r n
 #PBS -l walltime=5:00:00
-#PBS -l nodes=2:ppn=24
+#PBS -l nodes=1:ppn=24
 
 #PBS -N specfem2d
 #PBS -A dias01 #ndear017c #ucd01 #dias01
@@ -23,24 +23,24 @@ echo "--------------------------------------------"
 for simulationType in 1; do
 #for topoType in flat sine; do
 #for sourceIncidentAngle in 0 30; do
-for topoType in sine; do
-for sourceIncidentAngle in 0; do
+for topoType in gauss exp von; do
+for sourceIncidentAngle in 0 30; do
 echo ">>>>Simulation type = " $simulationType
 echo ">>>>topo type = " $topoType
 echo ">>>>source incident angle = " $sourceIncidentAngle
 
 cd $PBS_O_WORKDIR
 cd ../bash
-#./preprocess_adjoint.sh $simulationType $topoType $sourceIncidentAngle
+./preprocess_adjoint.sh $simulationType $topoType $sourceIncidentAngle
 
-cd ../
-echo running xmeshfem2d
-mpirun ./xmeshfem2D > ./OUTPUT_FILES/meshfem.log
-echo "--------------------------------------------"
-echo running  specfem2d
-mpirun ./xspecfem2D > ./OUTPUT_FILES/specfem.log
+#cd ../
+#echo running xmeshfem2d
+#mpirun ./xmeshfem2D > ./OUTPUT_FILES/meshfem.log
+#echo "--------------------------------------------"
+#echo running  specfem2d
+#mpirun ./xspecfem2D > ./OUTPUT_FILES/specfem.log
 
-cd ./bash
+#cd ./bash
 #./postprocess_adjoint.sh $simulationType $topoType $sourceIncidentAngle
 done
 done

@@ -64,7 +64,7 @@ topo = interp1(x_sparse,topo_sparse,x,'nearest');
 topo = topo - min(topo);
 case {'gauss','exp', 'von'}
 seed=18;
-correlationLength = 0.05; meanVal=0;stdVal=0.08;
+correlationLength = 0.02; meanVal=0;stdVal=0.08;
 topo=randomField1D(topoType,seed,x,correlationLength,meanVal,stdVal);
 topo = topo - min(topo);
 otherwise

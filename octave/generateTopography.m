@@ -62,9 +62,9 @@ rand('seed',18)
 topo_sparse = width*randi([0,4],size(x_sparse));
 topo = interp1(x_sparse,topo_sparse,x,'nearest');
 topo = topo - min(topo);
-case {'gauss','exp', 'von'}
+case {'gaussian','exponential', 'vonkarman'}
 seed=18;
-correlationLength = 0.02; meanVal=0;stdVal=0.08;
+correlationLength = 0.01; meanVal=0;stdVal=0.08;
 topo=randomField1D(topoType,seed,x,correlationLength,meanVal,stdVal);
 topo = topo - min(topo);
 otherwise

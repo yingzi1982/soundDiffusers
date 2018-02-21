@@ -27,6 +27,9 @@ band='PRE';
 variable='semp';
 resample_rate = 10;
 
+[receiver_polar] = load([backup_folder 'receiver_polar']);
+theta = rad2deg(pi/2 - receiver_polar(:,1));
+
 combinedPressureTrace = zeros(nt,stationNumber);
 for nStation = 1:stationNumber
   trace = load([OUTPUT_FILES_folder c{1,2}{nStation} '.' c{1,1}{nStation} '.' band '.' variable]);
@@ -37,15 +40,13 @@ t = t(1:resample_rate:end,:);
 combinedPressureTrace = combinedPressureTrace(1:resample_rate:end,:);
 combinedTotalPressureTrace = [t combinedPressureTrace];
 save("-ascii",[backup_folder 'combinedTotalPressureTrace'],'combinedTotalPressureTrace');
+combinedTotalPressureTrace_image = trace2image(combinedTotalPressureTrace,500,theta);
+save("-ascii",[backup_folder 'combinedTotalPressureTrace_image'],'combinedTotalPressureTrace_image');
 
 if ~strcmp(topoType,'none')
-combinedNoneTotalPressureTrace = load(['../running/' 'none_' sourceIncidentAngle '/backup/combinedTotalPressureTrace'])
+combinedNoneTotalPressureTrace = load(['../running/' 'none_' sourceIncidentAngle '/backup/combinedTotalPressureTrace']);
 combinedScatteredPressureTrace = [t combinedTotalPressureTrace(:,2:end)-combinedNoneTotalPressureTrace(:,2:end)];
 save("-ascii",[backup_folder 'combinedScatteredPressureTrace'],'combinedScatteredPressureTrace');
+combinedScatteredPressureTrace_image = trace2image(combinedScatteredPressureTrace,500,theta);
+save("-ascii",[backup_folder 'combinedScatteredPressureTrace_image'],'combinedScatteredPressureTrace_image');
 end
-
-%combinedPressureTrace_image = reshape(combinedPressureTrace(:,2:end),[],1);
-%[receiver_polarStatus receiver_polar] = system([backup_folder 'receiver_polar']);
-%receiver_polar = str2num(receiver_polar);
-%theta = cart2pol(pi/2 - receiver_polar(:,1))
-

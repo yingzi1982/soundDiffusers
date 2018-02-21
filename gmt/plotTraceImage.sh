@@ -29,45 +29,44 @@ gmt gmtset PS_PAGE_ORIENTATION portrait
 #gmt gmtset GMT_VERBOSE d
 
 runningName=$1
+traceImageName=$2
 backupfolder=../running/$runningName/backup/
 figfolder=../figures/$runningName/
+traceImageFile=$backupfolder$traceImageName
 mkdir -p $figfolder
 
-#lambda=`cat $backupfolder\lambda`
-#scale=$lambda
-scale=1
-
-
 #-----------------------------------------------------
-name=deployment
+ps=$figfolder$traceImageName.ps
+eps=$figfolder$traceImageName.eps
+pdf=$figfolder$traceImageName.pdf
 
-source=$backupfolder\source
-receiver=$backupfolder\receiver
-#topo=$backupfolder\topo
-topo_polygon=$backupfolder\topoPolygon
+#xmin=`gmt gmtinfo $traceImageFile -C | awk '{print $1}'`
+#xmax=`gmt gmtinfo $traceImageFile -C | awk '{print $2}'`
+xmin=-90
+xmax=90
+ymin=`gmt gmtinfo $traceImageFile -C | awk '{print $3}'`
+ymax=`gmt gmtinfo $traceImageFile -C | awk '{print $4}'`
+nx=200
+ny=500
+xinc=`echo "($xmax-($xmin))/$nx" | bc -l`
+yinc=`echo "($ymax-($ymin))/$ny" | bc -l`
 
-ps=$figfolder$name.ps
-eps=$figfolder$name.eps
-pdf=$figfolder$name.pdf
+zmin=-1
+zmax=1
+zinc=`echo "($zmax-($zmin))/50" | bc -l`
+cpt=$backupfolder$runningName.cpt
+gmt makecpt -CGMT_gray.cpt -T$zmin/$zmax/$zinc -Z > $cpt
+domain=1.1i/-0.4i/1.2i/0.16ih
 
-xmin=`awk -v scale="$scale" '{print $1/scale}' ../backup/mesh_info`
-xmax=`awk -v scale="$scale" '{print $2/scale}' ../backup/mesh_info`
-ymin=`awk -v scale="$scale" '{print $4/scale}' ../backup/mesh_info`
-#ymin=0
-ymax=`awk -v scale="$scale" '{print $5/scale}' ../backup/mesh_info`
+grd=$backupfolder$runningName.nc
 
-width=2.2
-height=`echo "$width*(($ymax)-($ymin))/(($xmax)-($xmin))" | bc -l`
-projection=X$width\i/$height\i
-
+projection=X1.8i/2.2i
 region=$xmin/$xmax/$ymin/$ymax
 
-awk -v scale="$scale" '{ print $1/scale, $2/scale }' $topo_polygon | gmt psxy -R$region -J$projection  -Bxa5f2.5+l"Cross range (m) " -Bya5f2.5+l"Range (m)" -Gred -W0.5p -K > $ps #-L+yt -Ggray 
-awk -v scale="$scale" '{ print $1/scale, $2/scale }' $source   | gmt psxy -R -J -Sa0.05i -Gred  -N -Wthinner,black -O -K >> $ps
-awk -v scale="$scale" '{ print $1/scale, $2/scale }' $receiver | gmt psxy -R -J -Sc0.02i -Gblue -N -Wthinner,black -O    >> $ps
-
+cat $traceImageFile | gmt blockmean -R$region -I$xinc/$yinc | gmt surface -R$region -I$xinc/$yinc -G$grd
+gmt grdimage -R$region -J$projection  -Bxa45f22.5+l"Angle (deg) " -Bya0.04f0.02+l"Time (s)" $grd -C$cpt > $ps
 
 gmt ps2raster -A -Te $ps -D$figfolder
 epstopdf --outfile=$pdf $eps
-rm -f $ps $eps
+rm -f $ps $eps $cpt
 rm -f $figfolder\ps2raster_*bb

@@ -23,7 +23,7 @@ echo "--------------------------------------------"
 for simulationType in 1; do
 #for topoType in flat sine; do
 #for sourceIncidentAngle in 0 30; do
-for topoType in gauss exp von; do
+for topoType in gaussian exponential vonkarman; do
 for sourceIncidentAngle in 0 30; do
 echo ">>>>Simulation type = " $simulationType
 echo ">>>>topo type = " $topoType

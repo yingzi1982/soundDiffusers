@@ -4,10 +4,13 @@ clear all
 close all
 clc
 
-runningName = input('Please input the running folder name: ','s');
-OUTPUT_FILES_folder = ['../running/' runningName '/OUTPUT_FILES/'];
-backup_folder = ['../running/' runningName '/backup/'];
-DATA_folder = ['../running/' runningName '/DATA/'];
+running = input('Please input the running folder name: ','s');
+runningStr = strsplit(running,'_');
+topoType=runningStr{1};
+sourceIncidentAngle=runningStr{2};
+OUTPUT_FILES_folder = ['../running/' running '/OUTPUT_FILES/'];
+backup_folder = ['../running/' running '/backup/'];
+DATA_folder = ['../running/' running '/DATA/'];
 
 
 [nt_status nt] = system(['grep ^NSTEP\  ' DATA_folder 'Par_file | cut -d = -f 2']);
@@ -22,16 +25,27 @@ stationNumber=length(c{1,1});
 
 band='PRE';
 variable='semp';
-resample_rate = 1;
+resample_rate = 10;
 
-combinedTrace = zeros(nt,stationNumber);
+combinedPressureTrace = zeros(nt,stationNumber);
 for nStation = 1:stationNumber
   trace = load([OUTPUT_FILES_folder c{1,2}{nStation} '.' c{1,1}{nStation} '.' band '.' variable]);
-  combinedTrace(:,nStation) = trace(:,2);
+  combinedPressureTrace(:,nStation) = trace(:,2);
 end
 t = trace(:,1) - trace(1,1);
-normalization = max(abs(combinedTrace(:)));
+t = t(1:resample_rate:end,:);
+combinedPressureTrace = combinedPressureTrace(1:resample_rate:end,:);
+combinedTotalPressureTrace = [t combinedPressureTrace];
+save("-ascii",[backup_folder 'combinedTotalPressureTrace'],'combinedTotalPressureTrace');
 
-combinedTrace=[t combinedTrace/normalization];
-combinedTrace = combinedTrace(1:resample_rate:end,:);
-save("-ascii",[backup_folder 'combinedTrace'],'combinedTrace');
+if ~strcmp(topoType,'none')
+combinedNoneTotalPressureTrace = load(['../running/' 'none_' sourceIncidentAngle '/backup/combinedTotalPressureTrace'])
+combinedScatteredPressureTrace = [t combinedTotalPressureTrace(:,2:end)-combinedNoneTotalPressureTrace(:,2:end)];
+save("-ascii",[backup_folder 'combinedScatteredPressureTrace'],'combinedScatteredPressureTrace');
+end
+
+%combinedPressureTrace_image = reshape(combinedPressureTrace(:,2:end),[],1);
+%[receiver_polarStatus receiver_polar] = system([backup_folder 'receiver_polar']);
+%receiver_polar = str2num(receiver_polar);
+%theta = cart2pol(pi/2 - receiver_polar(:,1))
+

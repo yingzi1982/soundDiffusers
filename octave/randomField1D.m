@@ -23,7 +23,7 @@ switch lower(tomoType)
 %case {'homogeneous','homo'}
 %  psdf = zeros(size(K));
 
-case {'gaussian','gauss'}
+case {'gaussian','gau'}
   psdf = exp(-(k.^2./4));
 
 case {'exponential','exp'}

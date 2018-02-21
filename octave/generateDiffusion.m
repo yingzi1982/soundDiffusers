@@ -7,8 +7,8 @@ clc
 runningName = input('Please input the running folder name: ','s');
 backup_folder = ['../running/' runningName '/backup/'];
 
-#./generateCombinedTrace.m
-combinedTrace = load([backup_folder 'combinedTrace']);
+#./generateCombinedPressureTrace.m
+combinedTrace = load([backup_folder 'combinedPressureTrace']);
 resample_rate = 10;
 t = combinedTrace(1:resample_rate:end,1);
 p = combinedTrace(1:resample_rate:end,2:end);

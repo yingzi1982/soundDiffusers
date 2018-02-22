@@ -42,7 +42,7 @@ ps=$figfolder\wiggle.ps
 eps=$figfolder\wiggle.eps
 pdf=$figfolder\wiggle.pdf
 
-time_resample=30
+time_resample=15
 totalTrace=`cat $backupfolder\combinedTotalPressureTrace | awk -v time_resample="$time_resample" 'NR%time_resample==1{print}' `
 
 receiver=$backupfolder\receiver_polar
@@ -60,7 +60,7 @@ region=$xmin/$xmax/$ymin/$ymax
 width=2.2
 height=2.8
 projection=X$width\i/$height\i
-scale=`echo "0.5/($width*$receiver_spacing/($receiver_end-($receiver_start)))" | bc -l`
+scale=`echo "0.2/($width*$receiver_spacing/($receiver_end-($receiver_start)))" | bc -l`
 
 gmt psbasemap -R$region -J$projection -Bxa45f22.5+l"Angle (deg) " -Bya0.04f0.02+l"Time (s)" -K > $ps
 

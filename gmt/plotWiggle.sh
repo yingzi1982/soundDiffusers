@@ -44,15 +44,12 @@ pdf=$figfolder\wiggle.pdf
 
 totalTrace=`cat $backupfolder\combinedTotalPressureTrace`
 scatteredTrace=`cat $backupfolder\combinedScatteredPressureTrace`
-#echo "$totalTrace"  | awk  -v trace_normalization="$trace_normalization" '{print $1,$2/trace_normalization}'
 
 receiver=$backupfolder\receiver_polar
-receiver_range=`awk '{print $1*180/pi}' $receiver`
-receiver_number=`cat $receiver | wc -l`
-#receiver_start=`awk 'NR==1 {print $1}' $receiver`
-#receiver_end=`awk 'END {print +$1}' $receiver`
-receiver_start=-90
-receiver_end=90
+receiver_range=`awk '{print 90-$1*(180/atan2(0,-1))}' $receiver`
+receiver_number=`echo "$receiver_range" | cat | wc -l`
+receiver_start=`echo "$receiver_range" | awk 'NR==1 {print $1}'`
+receiver_end=`echo "$receiver_range" | awk 'END {print $1}'`
 receiver_spacing=`echo "($receiver_end-($receiver_start)) / ($receiver_number-1)" | bc -l`
 scale=`echo "2/$receiver_spacing" | bc -l`
 xmin=`echo "$receiver_start-$receiver_spacing" | bc -l`
@@ -65,20 +62,24 @@ time_resample=5
 
 gmt psbasemap -R$region -J$projection -Bxa45f22.5+l"Angle (deg) " -Bya0.04f0.02+l"Time (s)" -K > $ps
 
+exit
 col=2
 for range in $receiver_range
 do
-echo "$totalTrace" | awk -v col="$col" -v range="$range" -v time_resample="$time_resample" 'NR%time_resample==0 { print range,$1,$col}' | gmt pswiggle -R -J -Z$scale -G-red -G+red -P -Wthinnest,black -O -K >> $ps
+echo "$totalTrace" | awk -v col="$col" -v range="$range" -v -v trace_normalization=$trace_normalization time_resample="$time_resample" 'NR%time_resample==0 { print range,$1,$col}' | gmt pswiggle -R -J -Z$scale -G-red -G+red -P -Wthinnest,black -O -K >> $ps
 let "col++"
 done
-gmt pslegend -R -J -D-2.5/-11.25/3i/TL -Fthick -O -K << END >> $ps
-S 0i s 0.05i 255/0/0 0.25p 0.1i 0% 
-END
-gmt pslegend -R -J -D0/-11.25/3i/TL -Fthick -O << END >> $ps
-S 0i s 0.05i 0/0/255 0.25p 0.1i 12% 
-END
+gmt psbasemap -R$region -J$projection -Bxa45f22.5+l"Angle (deg) " -Bya0.04f0.02+l"Time (s)" -O >> $ps
+#gmt pslegend -R -J -D-2.5/-11.25/3i/TL -Fthick -O -K << END >> $ps
+#S 0i s 0.05i 255/0/0 0.25p 0.1i 0% 
+#END
+#gmt pslegend -R -J -D0/-11.25/3i/TL -Fthick -O << END >> $ps
+#S 0i s 0.05i 0/0/255 0.25p 0.1i 12% 
+#END
 #---------------------------------------------------------
 
-ps2raster -A -Te $figfolder$ps -D$figfolder
+gmt ps2raster -A -Te $ps -D$figfolder
 epstopdf --outfile=$pdf $eps
-rm -f $ps
+rm -f $ps $eps $cpt
+rm -f $figfolder\ps2raster_*bb
+

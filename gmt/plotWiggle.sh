@@ -42,8 +42,8 @@ ps=$figfolder\wiggle.ps
 eps=$figfolder\wiggle.eps
 pdf=$figfolder\wiggle.pdf
 
-time_resample=20
-totalTrace=`cat $backupfolder\combinedTotalPressureTrace | awk -v time_resample="$time_resample" 'NR%time_resample==0{print}' `
+time_resample=10
+totalTrace=`cat $backupfolder\combinedTotalPressureTrace | awk -v time_resample="$time_resample" 'NR%time_resample==1{print}' `
 
 receiver=$backupfolder\receiver_polar
 receiver_range=`awk '{print 90-$1*(180/atan2(0,-1))}' $receiver`
@@ -60,14 +60,14 @@ region=$xmin/$xmax/$ymin/$ymax
 width=2.2
 height=2.8
 projection=X$width\i/$height\i
-scale=`echo "0.5/($width*$receiver_spacing/($receiver_end-($receiver_start)))" | bc -l`
+scale=`echo "1.0/($width*$receiver_spacing/($receiver_end-($receiver_start)))" | bc -l`
 
 gmt psbasemap -R$region -J$projection -Bxa45f22.5+l"Angle (deg) " -Bya0.04f0.02+l"Time (s)" -K > $ps
 
 col=2
 for range in $receiver_range
 do
-echo "$totalTrace" | awk -v col="$col" -v range="$range"  -v trace_normalization="$trace_normalization" '{ print range,$1,$col/$trace_normalization}' | gmt pswiggle -R -J -Z$scale -G+red -P -Wthinnest,black -O -K >> $ps
+echo "$totalTrace" | awk -v col="$col" -v range="$range"  -v trace_normalization="$trace_normalization" '{ print range,$1,$col/trace_normalization}' | gmt pswiggle -R -J -Z$scale -G+red -P -Wthinnest,black -O -K >> $ps
 let "col++"
 done
 gmt psbasemap -R$region -J$projection -Bxa45f22.5+l"Angle (deg) " -Bya0.04f0.02+l"Time (s)" -O >> $ps

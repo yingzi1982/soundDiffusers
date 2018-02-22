@@ -62,11 +62,10 @@ time_resample=5
 
 gmt psbasemap -R$region -J$projection -Bxa45f22.5+l"Angle (deg) " -Bya0.04f0.02+l"Time (s)" -K > $ps
 
-exit
 col=2
 for range in $receiver_range
 do
-echo "$totalTrace" | awk -v col="$col" -v range="$range" -v -v trace_normalization=$trace_normalization time_resample="$time_resample" 'NR%time_resample==0 { print range,$1,$col}' | gmt pswiggle -R -J -Z$scale -G-red -G+red -P -Wthinnest,black -O -K >> $ps
+echo "$totalTrace" | awk -v col="$col" -v range="$range" -v trace_normalization="$trace_normalization" -v time_resample="$time_resample" 'NR%time_resample==0 { print range,$1,$col}' | gmt pswiggle -R -J -Z$scale -G-red -G+red -P -Wthinnest,black -O -K >> $ps
 let "col++"
 done
 gmt psbasemap -R$region -J$projection -Bxa45f22.5+l"Angle (deg) " -Bya0.04f0.02+l"Time (s)" -O >> $ps
@@ -80,6 +79,6 @@ gmt psbasemap -R$region -J$projection -Bxa45f22.5+l"Angle (deg) " -Bya0.04f0.02+
 
 gmt ps2raster -A -Te $ps -D$figfolder
 epstopdf --outfile=$pdf $eps
-rm -f $ps $eps $cpt
+rm -f $ps $eps 
 rm -f $figfolder\ps2raster_*bb
 

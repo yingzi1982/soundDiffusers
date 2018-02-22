@@ -1,4 +1,4 @@
-#!/ichec/packages/octave/intel/3.6.4/bin/octave
+#!/usr/bin/env octave
 
 clear all
 close all

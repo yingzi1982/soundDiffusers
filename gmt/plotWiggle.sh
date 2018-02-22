@@ -51,13 +51,17 @@ receiver_number=`echo "$receiver_range" | cat | wc -l`
 receiver_start=`echo "$receiver_range" | awk 'NR==1 {print $1}'`
 receiver_end=`echo "$receiver_range" | awk 'END {print $1}'`
 receiver_spacing=`echo "($receiver_end-($receiver_start)) / ($receiver_number-1)" | bc -l`
-scale=`echo "2/$receiver_spacing" | bc -l`
+
 xmin=`echo "$receiver_start-$receiver_spacing" | bc -l`
 xmax=`echo "$receiver_end+$receiver_spacing" | bc -l`
 ymin=`echo "$totalTrace" | awk 'NR==1 {print $1}'`
 ymax=`echo "$totalTrace" | awk 'END {print $1}'`
 region=$xmin/$xmax/$ymin/$ymax
-projection=X2.2i/2.8i
+width=2.2
+height=2.8
+projection=X$width\i/$height\i
+scale=`echo "1/($width*$receiver_spacing/($receiver_end-($receiver_start)))" | bc -l`
+
 time_resample=5
 
 gmt psbasemap -R$region -J$projection -Bxa45f22.5+l"Angle (deg) " -Bya0.04f0.02+l"Time (s)" -K > $ps
@@ -65,7 +69,7 @@ gmt psbasemap -R$region -J$projection -Bxa45f22.5+l"Angle (deg) " -Bya0.04f0.02+
 col=2
 for range in $receiver_range
 do
-echo "$totalTrace" | awk -v col="$col" -v range="$range" -v trace_normalization="$trace_normalization" -v time_resample="$time_resample" 'NR%time_resample==0 { print range,$1,$col/trace_normalization}' | gmt pswiggle -R -J -Z$scale -G-red -G+red -P -Wthinnest,black -O -K >> $ps
+echo "$totalTrace" | awk -v col="$col" -v range="$range" -v trace_normalization="$trace_normalization" -v time_resample="$time_resample" 'NR%time_resample==0 { print range,$1,$col/trace_normalization}' | gmt pswiggle -R -J -Z$scale -G+red -P -Wthinnest,black -O -K >> $ps
 let "col++"
 done
 gmt psbasemap -R$region -J$projection -Bxa45f22.5+l"Angle (deg) " -Bya0.04f0.02+l"Time (s)" -O >> $ps

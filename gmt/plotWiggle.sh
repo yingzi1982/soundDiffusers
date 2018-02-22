@@ -70,7 +70,6 @@ do
 echo "$totalTrace" | awk -v col="$col" -v range="$range"  -v trace_normalization="$trace_normalization" '{ print range,$1,$col/$trace_normalization}' | gmt pswiggle -R -J -Z$scale -G+red -P -Wthinnest,black -O -K >> $ps
 let "col++"
 done
-exit
 gmt psbasemap -R$region -J$projection -Bxa45f22.5+l"Angle (deg) " -Bya0.04f0.02+l"Time (s)" -O >> $ps
 #gmt pslegend -R -J -D-2.5/-11.25/3i/TL -Fthick -O -K << END >> $ps
 #S 0i s 0.05i 255/0/0 0.25p 0.1i 0% 

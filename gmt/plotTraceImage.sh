@@ -51,11 +51,11 @@ ny=500
 xinc=`echo "($xmax-($xmin))/$nx" | bc -l`
 yinc=`echo "($ymax-($ymin))/$ny" | bc -l`
 
-zmin=-1
+zmin=0
 zmax=1
 zinc=`echo "($zmax-($zmin))/50" | bc -l`
 cpt=$backupfolder$runningName.cpt
-gmt makecpt -CGMT_gray.cpt -T$zmin/$zmax/$zinc -Z > $cpt
+gmt makecpt -Chot.cpt -T$zmin/$zmax/$zinc -Z -Iz > $cpt
 domain=1.1i/-0.4i/1.2i/0.16ih
 
 grd=$backupfolder$runningName.nc
@@ -63,7 +63,8 @@ grd=$backupfolder$runningName.nc
 projection=X1.8i/2.2i
 region=$xmin/$xmax/$ymin/$ymax
 
-cat $traceImageFile | gmt blockmean -R$region -I$xinc/$yinc | gmt surface -R$region -I$xinc/$yinc -G$grd
+cat $traceImageFile | awk '{print $1,$2,sqrt($3^2)}' | gmt blockmean -R$region -I$xinc/$yinc | gmt surface -R$region -I$xinc/$yinc -G$grd
+#cat $traceImageFile | awk '{print $1,$2,$3}' | gmt blockmean -R$region -I$xinc/$yinc | gmt surface -R$region -I$xinc/$yinc -G$grd
 gmt grdimage -R$region -J$projection  -Bxa45f22.5+l"Angle (deg) " -Bya0.04f0.02+l"Time (s)" $grd -C$cpt > $ps
 
 gmt ps2raster -A -Te $ps -D$figfolder

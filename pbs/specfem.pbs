@@ -6,7 +6,7 @@
 #PBS -l nodes=1:ppn=24
 
 #PBS -N specfem2d
-#PBS -A dias01 #ndear017c #ucd01 #dias01
+#PBS -A ucd01 #ndear017c #ucd01 #dias01
 #PBS -j oe
 #PBS -o specfem.log
 ##PBS -e specfem.err

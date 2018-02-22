@@ -38,6 +38,12 @@ end
 t = trace(:,1) - trace(1,1);
 t = t(1:resample_rate:end,:);
 combinedPressureTrace = combinedPressureTrace(1:resample_rate:end,:);
+
+if strcmp(topoType,'none')
+  trace_normalization =  max(abs(combinedPressureTrace(:)));
+  save("-ascii",[backup_folder 'trace_normalization'],'trace_normalization');
+end
+
 combinedTotalPressureTrace = [t combinedPressureTrace];
 save("-ascii",[backup_folder 'combinedTotalPressureTrace'],'combinedTotalPressureTrace');
 combinedTotalPressureTrace_image = trace2image(combinedTotalPressureTrace,500,theta);

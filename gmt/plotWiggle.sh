@@ -28,48 +28,47 @@ gmt gmtset PS_MEDIA letter
 gmt gmtset PS_PAGE_ORIENTATION portrait
 #gmt gmtset GMT_VERBOSE d
 
-figfolder=../figures/
-length=2.0i
-height=2.2i
-horizontal_shift=2.1i
-#---------------------------------------------------------
-type=sh
-component=Y
-name=combinedTrace_$component\_1
-backupfolder=../$type/0/backup/
-backupfolder2=../$type/12/backup/
-lambda=`cat $backupfolder\lambda`
-xy=$backupfolder$name
-xy2=$backupfolder2$name
-receiver=$backupfolder\receiver
-receiver_range=`awk -v lambda="$lambda" '{print +$1/lambda}' $receiver`
+runningName=$1
+
+topoType=`echo $runningName | cut -d '_'  -f1`
+sourceIncidentAngle=`echo $runningName | cut -d '_'  -f2`
+trace_normalization=`cat ../running/none_$sourceIncidentAngle/backup/trace_normalization`
+
+backupfolder=../running/$runningName/backup/
+figfolder=../figures/$runningName/ 
+mkdir -p $figfolder
+
+ps=$figfolder\wiggle.ps
+eps=$figfolder\wiggle.eps
+pdf=$figfolder\wiggle.pdf
+
+totalTrace=`cat $backupfolder\combinedTotalPressureTrace`
+scatteredTrace=`cat $backupfolder\combinedScatteredPressureTrace`
+#echo "$totalTrace"  | awk  -v trace_normalization="$trace_normalization" '{print $1,$2/trace_normalization}'
+
+receiver=$backupfolder\receiver_polar
+receiver_range=`awk '{print $1*180/pi}' $receiver`
 receiver_number=`cat $receiver | wc -l`
-receiver_start=`awk -v lambda="$lambda" 'NR==1 {print +$1/lambda}' $receiver`
-receiver_end=`awk -v lambda="$lambda" 'END {print +$1/lambda}' $receiver`
+#receiver_start=`awk 'NR==1 {print $1}' $receiver`
+#receiver_end=`awk 'END {print +$1}' $receiver`
+receiver_start=-90
+receiver_end=90
 receiver_spacing=`echo "($receiver_end-($receiver_start)) / ($receiver_number-1)" | bc -l`
 scale=`echo "2/$receiver_spacing" | bc -l`
 xmin=`echo "$receiver_start-$receiver_spacing" | bc -l`
 xmax=`echo "$receiver_end+$receiver_spacing" | bc -l`
-ymin=0
-ymax=10
-centralTime=15
+ymin=`echo "$totalTrace" | awk 'NR==1 {print $1}'`
+ymax=`echo "$totalTrace" | awk 'END {print $1}'`
 region=$xmin/$xmax/$ymin/$ymax
-projection=X$length/-$height
+projection=X2.2i/2.8i
 time_resample=5
 
-ps=$figfolder\wiggle_$type.ps
-eps=$figfolder\wiggle_$type.eps
-pdf=$figfolder\wiggle_$type.pdf
-
-#gmt psbasemap -R$region -J$projection -Bxa5f2.5+l"Horizontal offset (@~l@~@-s@-)" -Bya5f2.5+l"Time (s)" -K > $ps
-gmt psbasemap -R$region -J$projection -Bxa5f2.5+l"Horizontal offset" -Bya5f2.5+l"Time (s)" -K > $ps
-
+gmt psbasemap -R$region -J$projection -Bxa45f22.5+l"Angle (deg) " -Bya0.04f0.02+l"Time (s)" -K > $ps
 
 col=2
 for range in $receiver_range
 do
-cat $xy2 | awk -v centralTime="$centralTime" -v col="$col" -v range="$range" -v time_resample="$time_resample" 'NR%time_resample==0 { print range,$1-centralTime,$col}' | gmt pswiggle -R -J -Z$scale -G-blue -G+blue -P -Wthinnest,black -O -K >> $ps
-cat $xy | awk -v centralTime="$centralTime" -v col="$col" -v range="$range" -v time_resample="$time_resample" 'NR%time_resample==0 { print range,$1-centralTime,$col}' | gmt pswiggle -R -J -Z$scale -G-red -G+red -P -Wthinnest,black -O -K >> $ps
+echo "$totalTrace" | awk -v col="$col" -v range="$range" -v time_resample="$time_resample" 'NR%time_resample==0 { print range,$1,$col}' | gmt pswiggle -R -J -Z$scale -G-red -G+red -P -Wthinnest,black -O -K >> $ps
 let "col++"
 done
 gmt pslegend -R -J -D-2.5/-11.25/3i/TL -Fthick -O -K << END >> $ps

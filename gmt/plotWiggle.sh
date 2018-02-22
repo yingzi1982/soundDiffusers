@@ -42,7 +42,7 @@ ps=$figfolder\wiggle.ps
 eps=$figfolder\wiggle.eps
 pdf=$figfolder\wiggle.pdf
 
-time_resample=15
+time_resample=5
 totalTrace=`cat $backupfolder\combinedTotalPressureTrace | awk -v time_resample="$time_resample" 'NR%time_resample==1{print}' `
 scatteredTrace=`cat $backupfolder\combinedScatteredPressureTrace | awk -v time_resample="$time_resample" 'NR%time_resample==1{print}' `
 

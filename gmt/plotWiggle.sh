@@ -29,6 +29,8 @@ gmt gmtset PS_PAGE_ORIENTATION portrait
 #gmt gmtset GMT_VERBOSE d
 
 runningName=$1
+traceName=$2
+
 
 topoType=`echo $runningName | cut -d '_'  -f1`
 sourceIncidentAngle=`echo $runningName | cut -d '_'  -f2`
@@ -38,13 +40,12 @@ backupfolder=../running/$runningName/backup/
 figfolder=../figures/$runningName/ 
 mkdir -p $figfolder
 
-ps=$figfolder\wiggle.ps
-eps=$figfolder\wiggle.eps
-pdf=$figfolder\wiggle.pdf
+ps=$figfolder$traceName\_wiggle.ps
+eps=$figfolder$traceName\_wiggle.eps
+pdf=$figfolder$traceName\_wiggle.pdf
 
 time_resample=5
-totalTrace=`cat $backupfolder\combinedTotalPressureTrace | awk -v time_resample="$time_resample" 'NR%time_resample==1{print}' `
-scatteredTrace=`cat $backupfolder\combinedScatteredPressureTrace | awk -v time_resample="$time_resample" 'NR%time_resample==1{print}' `
+trace=`cat $backupfolder$traceName | awk -v time_resample="$time_resample" 'NR%time_resample==1{print}' `
 
 receiver=$backupfolder\receiver_polar
 receiver_range=`awk '{print 90-$1*(180/atan2(0,-1))}' $receiver`
@@ -55,8 +56,8 @@ receiver_spacing=`echo "($receiver_end-($receiver_start)) / ($receiver_number-1)
 
 xmin=`echo "$receiver_start-$receiver_spacing" | bc -l`
 xmax=`echo "$receiver_end+$receiver_spacing" | bc -l`
-ymin=`echo "$totalTrace" | awk 'NR==1 {print $1}'`
-ymax=`echo "$totalTrace" | awk 'END {print $1}'`
+ymin=`echo "$trace" | awk 'NR==1 {print $1}'`
+ymax=`echo "$trace" | awk 'END {print $1}'`
 region=$xmin/$xmax/$ymin/$ymax
 width=2.2
 height=2.8
@@ -68,8 +69,7 @@ gmt psbasemap -R$region -J$projection -Bxa45f22.5+l"Angle (deg) " -Bya0.04f0.02+
 col=2
 for range in $receiver_range
 do
-echo "$totalTrace" | awk -v col="$col" -v range="$range"  -v trace_normalization="$trace_normalization" '{ print range,$1,$col/trace_normalization}' | gmt pswiggle -R -J -Z$scale -P -Wthinnest,black -O -K >> $ps #-G-red -G+red 
-echo "$scatteredTrace" | awk -v col="$col" -v range="$range"  -v trace_normalization="$trace_normalization" '{ print range,$1,$col/trace_normalization}' | gmt pswiggle -R -J -Z$scale -P -Wthinnest,red -O -K >> $ps #-G-red -G+red 
+echo "$trace" | awk -v col="$col" -v range="$range"  -v trace_normalization="$trace_normalization" '{ print range,$1,$col/trace_normalization}' | gmt pswiggle -R -J -Z$scale -P -Wthinnest,black -O -K >> $ps #-G-red -G+red 
 let "col++"
 done
 gmt psbasemap -R$region -J$projection -Bxa45f22.5+l"Angle (deg) " -Bya0.04f0.02+l"Time (s)" -O >> $ps

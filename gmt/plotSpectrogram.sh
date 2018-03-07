@@ -1,8 +1,6 @@
 #!/bin/bash
 source /usr/share/modules/init/bash
-module load apps gmt/intel/5.1.0
-
-
+module load apps gmt
 #-------
 rm gmt.conf
 rm gmt.history

@@ -1,7 +1,6 @@
 #!/bin/bash
 source /usr/share/modules/init/bash
-module load apps gmt/intel/5.1.0
-
+module load apps gmt
 rm gmt.conf
 rm gmt.history
 
@@ -47,12 +46,12 @@ xmax=90
 ymin=`gmt gmtinfo $traceImageFile -C | awk '{print $3}'`
 ymax=`gmt gmtinfo $traceImageFile -C | awk '{print $4}'`
 nx=200
-ny=500
+ny=300
 xinc=`echo "($xmax-($xmin))/$nx" | bc -l`
 yinc=`echo "($ymax-($ymin))/$ny" | bc -l`
 
-zmin=0
-zmax=1
+zmin=-3
+zmax=0
 zinc=`echo "($zmax-($zmin))/50" | bc -l`
 cpt=$backupfolder$runningName.cpt
 gmt makecpt -Chot.cpt -T$zmin/$zmax/$zinc -Z -Iz > $cpt
@@ -63,7 +62,7 @@ grd=$backupfolder$runningName.nc
 projection=X1.8i/2.2i
 region=$xmin/$xmax/$ymin/$ymax
 
-cat $traceImageFile | awk '{print $1,$2,sqrt($3^2)}' | gmt blockmean -R$region -I$xinc/$yinc | gmt surface -R$region -I$xinc/$yinc -G$grd
+cat $traceImageFile | awk '{print $1,$2,log($3)}' | gmt blockmean -R$region -I$xinc/$yinc | gmt surface -R$region -I$xinc/$yinc -G$grd
 #cat $traceImageFile | awk '{print $1,$2,$3}' | gmt blockmean -R$region -I$xinc/$yinc | gmt surface -R$region -I$xinc/$yinc -G$grd
 gmt grdimage -R$region -J$projection  -Bxa45f22.5+l"Angle (deg) " -Bya0.04f0.02+l"Time (s)" $grd -C$cpt > $ps
 

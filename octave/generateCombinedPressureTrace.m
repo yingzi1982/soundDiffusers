@@ -4,7 +4,15 @@ clear all
 close all
 clc
 
-running = input('Please input the running folder name: ','s');
+arg_list = argv ();
+if length(arg_list) > 0
+  running=arg_list{1};
+else
+  running = input('Please input the running name: ','s');
+end
+
+disp(['generating combined pressure traces in: ', running])
+
 runningStr = strsplit(running,'_');
 topoType=runningStr{1};
 sourceIncidentAngle=runningStr{2};
@@ -46,13 +54,13 @@ end
 
 combinedTotalPressureTrace = [t combinedPressureTrace];
 save("-ascii",[backup_folder 'combinedTotalPressureTrace'],'combinedTotalPressureTrace');
-combinedTotalPressureTrace_image = trace2image(combinedTotalPressureTrace,500,theta);
+combinedTotalPressureTrace_image = trace2image(combinedTotalPressureTrace,300,theta);
 save("-ascii",[backup_folder 'combinedTotalPressureTrace_image'],'combinedTotalPressureTrace_image');
 
 if ~strcmp(topoType,'none')
 combinedNoneTotalPressureTrace = load(['../running/' 'none_' sourceIncidentAngle '/backup/combinedTotalPressureTrace']);
 combinedScatteredPressureTrace = [t combinedTotalPressureTrace(:,2:end)-combinedNoneTotalPressureTrace(:,2:end)];
 save("-ascii",[backup_folder 'combinedScatteredPressureTrace'],'combinedScatteredPressureTrace');
-combinedScatteredPressureTrace_image = trace2image(combinedScatteredPressureTrace,500,theta);
+combinedScatteredPressureTrace_image = trace2image(combinedScatteredPressureTrace,300,theta);
 save("-ascii",[backup_folder 'combinedScatteredPressureTrace_image'],'combinedScatteredPressureTrace_image');
 end

@@ -1,8 +1,8 @@
 #!/bin/bash
 source /usr/share/modules/init/bash
 
-module load apps octave/intel/3.6.4
+module load apps octave
 cd ../octave
 ./generateAdjointSources.m
-module unload apps octave/intel/3.6.4
+module unload apps octave
 

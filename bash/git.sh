@@ -7,6 +7,7 @@ module load dev git/intel/2.2.1
 
 operation=$1
 folder="../bash/*sh ../figures ../gmt/*cpt ../gmt/*sh ../octave/*m ../pbs/*pbs ../backup/Par_file_part"
+#folder="../figures"
 #folder=$2
 
 if [ $operation == 'push' ]

@@ -1,19 +1,26 @@
-#!/ichec/packages/octave/3.6.3/octave-3.6.3_build/bin/octave
 function [image]=trace2image(trace,nt,range)
+pkg load signal
 
-tstep = floor(rows(trace)/nt);
+resample = floor(rows(trace)/nt);
 
-t = trace(1:tstep:end,1);
+t = trace(:,1);
 t = t-t(1);
 
-trace = trace(1:tstep:end,2:end);
-trace = trace/max(abs(trace(:)));
+trace = trace(:,2:end);
+
+TRACE = abs(hilbert(trace));
+TRACE = TRACE/max(abs(TRACE(:)));
+
+t = t(1:resample:end);
+TRACE = TRACE(1:resample:end,:);
+
 
 [RANGE T] = meshgrid(range,t);
 
-image = reshape(trace,[],1);
+image = reshape(TRACE,[],1);
 RANGE = reshape(RANGE(:,:),[],1);
 T = reshape(T(:,:),[],1);
 
 image = [RANGE T image];
+pkg unload signal
 end

@@ -4,10 +4,18 @@ clear all
 close all
 clc
 
-input = input('Please input the step and incident Angle: ','s')
-input = str2num(input);
-step = input(1);
-incidentAngle = input(2);
+arg_list = argv ();
+if length(arg_list) > 0
+  step=arg_list{1};
+  step=str2num(step);
+  incidentAngle=arg_list{2};
+  incidentAngle=str2num(incidentAngle);
+else
+  input = input('Please input the step and incident Angle: ','s')
+  input = str2num(input);
+  step = input(1);
+  incidentAngle = input(2);
+end
 
 [f0Status freq0] = system('grep f0_attenuation ../backup/Par_file_part | cut -d = -f 2');
 freq0 = str2num(freq0);

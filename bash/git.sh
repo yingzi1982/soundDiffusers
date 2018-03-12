@@ -1,6 +1,6 @@
 #!/bin/bash
 source /usr/share/modules/init/bash
-module load dev git/intel/2.2.1
+module load dev git
 #module load dev git/intel/1.8.4.3
 #http://blog.csdn.net/sinat_20177327/article/details/76062030
 #http://kbroman.org/github_tutorial/pages/init.html

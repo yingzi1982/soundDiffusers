@@ -1,6 +1,4 @@
 #!/bin/bash
-source /usr/share/modules/init/bash
-module load dev git/intel/2.2.1
 running=$1
 runningFolder=../running/$running
 rm -r $runningFolder

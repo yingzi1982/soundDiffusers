@@ -1,12 +1,23 @@
 #!/usr/bin/env octave
 % input the secondary derivative of the source time function and record fluid potential as pressure to eliminate numerical ripple
+%https://se.mathworks.com/help/signal/ref/kaiserord.html
+%https://se.mathworks.com/matlabcentral/fileexchange/37376-oscillator-and-signal-generator
 
 clear all
 close all
 clc
 
-input = input('Please input the step: ','s');
-step = str2num(input);
+%pkg load signal
+
+
+arg_list = argv ();
+if length(arg_list) > 0
+  step=arg_list{1};
+  step=str2num(step);
+else
+  input = input('Please input the step: ','s');
+  step = str2num(input);
+end
 
 switch step
 case 1 % forward simulation
@@ -41,8 +52,9 @@ source_signal = [t -s];
 
 save("-ascii",['../', strtrim(source_file)],'source_signal');
 
-%figure
-%plot(t_cut,s_cut)
+figure
+plot(t_cut,s_cut)
+
 L = length(t_cut);
 nfft = 2^nextpow2(L);
 S_cut = fft(s_cut,nfft);
@@ -53,9 +65,9 @@ P_cut = abs(S_cut/nfft);
 sourceFrequencySpetrum =[f,P_cut(1:nfft/2+1)];
 save("-ascii",['../backup/sourceFrequencySpetrum'],'sourceFrequencySpetrum')
 
-%figure
-%plot(f,P_cut(1:nfft/2+1)) 
-%xlim([0,20000])
+figure
+plot(f,P_cut(1:nfft/2+1)) 
+xlim([0,20000])
 
 case 2 % backward simulation
 [p_sv_status p_sv] = system('grep p_sv ../backup/Par_file_part | cut -d = -f 2');
@@ -105,4 +117,3 @@ end
 otherwise
 error('Wrong step type.')
 end
-

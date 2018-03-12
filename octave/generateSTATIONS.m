@@ -4,13 +4,19 @@ clear all
 close all
 clc
 
+arg_list = argv ();
+if length(arg_list) > 0
+  step=arg_list{1};
+  step=str2num(step);
+else
+  input = input('Please input the step: ','s')
+  step = str2num(input);
+end
 
-input = input('Please input the step: ','s')
-step = str2num(input);
 switch step
 case 1
 
-theta_station_step = deg2rad(2.5);
+theta_station_step = deg2rad(1);
 %theta_station_gap = 2*theta_station_step;
 theta_station_gap = 0;
 radii = 5;

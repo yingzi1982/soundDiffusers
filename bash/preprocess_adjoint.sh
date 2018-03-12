@@ -1,61 +1,78 @@
 #!/bin/bash
 simulationType=$1
-topoType=$2
-#sourceFrequency=$3
-sourceIncidentAngle=$3
+stdpercentage=$2
+p_sv=$3
 
 echo ">>preprocessing"
 source /usr/share/modules/init/bash
 module load apps octave/intel/3.6.4
 
+if [ $p_sv == '.true.' ];
+then
+oldString=`grep "^p_sv" ../backup/Par_file_part`
+newString="p_sv                            = .true."
+sed -i "s/$oldString/$newString/g" ../backup/Par_file_part
+
+oldString=`grep "^PML_BOUNDARY_CONDITIONS" ../backup/Par_file_part`
+newString="PML_BOUNDARY_CONDITIONS         = .true."
+sed -i "s/$oldString/$newString/g" ../backup/Par_file_part
+
+oldString=`grep "^STACEY_ABSORBING_CONDITIONS" ../backup/Par_file_part`
+newString="STACEY_ABSORBING_CONDITIONS     = .false."
+sed -i "s/$oldString/$newString/g" ../backup/Par_file_part
+
+elif [ $p_sv == '.false.' ];
+then
+
+oldString=`grep "^p_sv" ../backup/Par_file_part`
+newString="p_sv                            = .false."
+sed -i "s/$oldString/$newString/g" ../backup/Par_file_part
+
+oldString=`grep "^PML_BOUNDARY_CONDITIONS" ../backup/Par_file_part`
+newString="PML_BOUNDARY_CONDITIONS         = .false."
+sed -i "s/$oldString/$newString/g" ../backup/Par_file_part
+
+oldString=`grep "^STACEY_ABSORBING_CONDITIONS" ../backup/Par_file_part`
+newString="STACEY_ABSORBING_CONDITIONS     = .true."
+sed -i "s/$oldString/$newString/g" ../backup/Par_file_part
+
+fi
+
+
 if [ $simulationType -eq 1 ];
 then
 #-----------------------------------------------------
 cd ../octave
-#oldString=`grep "^f0_attenuation" ../backup/Par_file_part`
-#newString="f0_attenuation                  = $sourceFrequency"
-#sed -i "s/$oldString/$newString/g" ../backup/Par_file_part
-
-./generateInterfaces.m
-echo "interfaces created"
-
 step=1
-echo $step $sourceIncidentAngle | ./generateSOURCE.m
+echo $step | ./generateSOURCE.m
 echo "SOURCE created"
 
 echo $step | ./generateSOURCE_TIME_FUNCTION.m
 echo "SOURCE_TIME_FUNCTION created"
 
+#./generateTopography.m
+#echo "topography and slice created"
+./generateInterfaces.m
+echo "interfaces created"
+echo $stdpercentage | ./generateRandomField.m
+cd ../bash
+./createPar_file.sh
+cd ../octave
+
 echo $step | ./generateSTATIONS.m
 cp ../DATA/STATIONS ../backup
 echo "STATIONS created"
 
-echo $topoType | ./generateTopography.m
-echo "topography created"
-
-cd ../bash
-./createPar_file.sh
 #-----------------------------------------------------
-
-oldString=`grep "^NSTEP_BETWEEN_OUTPUT_IMAGES " ../DATA/Par_file`
-newString='NSTEP_BETWEEN_OUTPUT_IMAGES = 1000'
-sed -i "s/$oldString/$newString/g" ../DATA/Par_file
-
 oldString=`grep "^output_wavefield_dumps" ../DATA/Par_file`
-newString='output_wavefield_dumps          = .true.'
+newString='output_wavefield_dumps          = .false.'
 sed -i "s/$oldString/$newString/g" ../DATA/Par_file
-
 oldString=`grep "^SIMULATION_TYPE" ../DATA/Par_file`
 newString='SIMULATION_TYPE                 = 1'
 sed -i "s/$oldString/$newString/g" ../DATA/Par_file
-
 oldString=`grep "^SAVE_FORWARD" ../DATA/Par_file`
-newString='SAVE_FORWARD                    = .false.'
+newString='SAVE_FORWARD                    = .true.'
 sed -i "s/$oldString/$newString/g" ../DATA/Par_file
-
-#--------------------------------------------------------
-./running.sh $topoType\_$sourceIncidentAngle
-#--------------------------------------------------------
 
 elif [ $simulationType -eq 3 ];
 then

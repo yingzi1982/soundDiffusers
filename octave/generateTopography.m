@@ -3,7 +3,13 @@ clear all
 close all
 clc
 
-topoType = input('Please input the topography type of interface: ','s');
+arg_list = argv ();
+if length(arg_list) > 0
+  topoType = arg_list{1};
+else
+  topoType = input('Please input the topography type of interface: ','s');
+end
+
 
 mesh_info = load('../backup/mesh_info');
 xmin = mesh_info(1);

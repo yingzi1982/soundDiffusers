@@ -1,15 +1,13 @@
 #!/bin/bash
-simulationType=$1
-topoType=$2
-#sourceFrequency=$3
-sourceIncidentAngle=$3
+source /usr/share/modules/init/bash
+module load apps octave
+
+topoType=$1
+sourceIncidentAngle=$2
 
 echo ">>preprocessing"
-source /usr/share/modules/init/bash
-module load apps octave/intel/3.6.4
+step=1
 
-if [ $simulationType -eq 1 ];
-then
 #-----------------------------------------------------
 cd ../octave
 #oldString=`grep "^f0_attenuation" ../backup/Par_file_part`
@@ -19,19 +17,19 @@ cd ../octave
 ./generateInterfaces.m
 echo "interfaces created"
 
-step=1
-echo $step $sourceIncidentAngle | ./generateSOURCE.m
+./generateSOURCE.m $step $sourceIncidentAngle 
 echo "SOURCE created"
 
-echo $step | ./generateSOURCE_TIME_FUNCTION.m
+./generateSOURCE_TIME_FUNCTION.m $step 
 echo "SOURCE_TIME_FUNCTION created"
 
-echo $step | ./generateSTATIONS.m
+./generateSTATIONS.m $step 
 cp ../DATA/STATIONS ../backup
 echo "STATIONS created"
 
-echo $topoType | ./generateTopography.m
+./generateTopography.m $topoType 
 echo "topography created"
+exit
 
 cd ../bash
 ./createPar_file.sh
@@ -57,18 +55,4 @@ sed -i "s/$oldString/$newString/g" ../DATA/Par_file
 ./running.sh $topoType\_$sourceIncidentAngle
 #--------------------------------------------------------
 
-elif [ $simulationType -eq 3 ];
-then
-oldString=`grep "^output_wavefield_dumps" ../DATA/Par_file`
-newString='output_wavefield_dumps          = .false.'
-sed -i "s/$oldString/$newString/g" ../DATA/Par_file
-oldString=`grep "^SIMULATION_TYPE" ../DATA/Par_file`
-newString='SIMULATION_TYPE                 = 3'
-sed -i "s/$oldString/$newString/g" ../DATA/Par_file
-oldString=`grep "^SAVE_FORWARD" ../DATA/Par_file`
-newString='SAVE_FORWARD                    = .false.'
-sed -i "s/$oldString/$newString/g" ../DATA/Par_file
-
-fi
-module unload apps octave/intel/3.6.4
 echo "preprocessed"

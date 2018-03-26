@@ -1,4 +1,5 @@
 #!/bin/bash
+source /usr/share/modules/init/bash
 echo  'please make sure that you have enough memory, interactive pbs mode is recommended!'
 
 oldString=`grep "^SAVE_MODEL" ../backup/Par_file_part`
@@ -8,12 +9,10 @@ sed -i "s/$oldString/$newString/g" ../backup/Par_file_part
 ./createOUTPUT_MODEL_VELOCITY_FILE.sh
 
 
-source /usr/share/modules/init/bash
-module load apps octave/intel/3.6.4
+module load apps octave
 cd ../octave
-
 ./generateModelsAndRegions.m
-module unload apps octave/intel/3.6.4
+module unload apps octave
 
 cd ../bash
 ./createTOMO.sh

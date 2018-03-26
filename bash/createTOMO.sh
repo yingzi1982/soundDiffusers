@@ -1,6 +1,6 @@
 #!/bin/bash
 source /usr/share/modules/init/bash
-module load apps octave/intel/3.6.4
+module load apps octave
 
 cat ../backup/Par_file_part ../backup/models ../backup/regions > ../DATA/Par_file
 
@@ -21,4 +21,4 @@ mv ./DATA/proc000000_rho_vp_vs.dat ./backup/proc000000_rho_vp_vs.dat.serial
 
 cd ./octave
 ./generateTOMO.m
-module unload apps octave/intel/3.6.4
+module unload apps octave

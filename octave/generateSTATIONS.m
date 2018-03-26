@@ -16,7 +16,8 @@ end
 switch step
 case 1
 
-theta_station_step = deg2rad(1);
+%theta_station_step = deg2rad(1);
+theta_station_step = deg2rad(2.5);
 %theta_station_gap = 2*theta_station_step;
 theta_station_gap = 0;
 radii = 5;

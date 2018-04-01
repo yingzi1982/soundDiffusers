@@ -19,5 +19,5 @@ oldString=`grep "^#PBS -N" $pbsFile`
 newString="#PBS -N $running"
 sed -i "s/$oldString/$newString/g" $pbsFile
 
-qsub $pbsFile
+#qsub $pbsFile
 

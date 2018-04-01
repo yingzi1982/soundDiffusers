@@ -29,7 +29,6 @@ echo "STATIONS created"
 
 ./generateTopography.m $topoType 
 echo "topography created"
-exit
 
 cd ../bash
 ./createPar_file.sh

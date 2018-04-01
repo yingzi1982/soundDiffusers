@@ -2,7 +2,7 @@
 
 #PBS -V
 #PBS -r n
-#PBS -l walltime=2:50:00
+#PBS -l walltime=8:50:00
 #PBS -l nodes=1:ppn=24
 
 #PBS -N run_bash
@@ -21,7 +21,10 @@ echo "started at `date`"
 echo "--------------------------------------------"
 
 
-
 cd $PBS_O_WORKDIR
 cd ../bash
-./postprocess.sh
+for topoType in none flat sine triangle rectangle skyline gaussian exponential vonkarman; do
+for sourceIncidentAngle in 0 30; do
+./preprocess.sh $topoType $sourceIncidentAngle
+done
+done

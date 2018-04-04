@@ -6,7 +6,7 @@ module load dev git
 #http://kbroman.org/github_tutorial/pages/init.html
 
 operation=$1
-folder="../bash/*sh ../figures ../gmt/*cpt ../gmt/*sh ../octave/*m ../pbs/*pbs ../backup/Par_file_part"
+folder="../README.md ../bash/*sh ../figures ../gmt/*cpt ../gmt/*sh ../octave/*m ../pbs/*pbs ../backup/Par_file_part"
 #folder="../figures"
 #folder=$2
 

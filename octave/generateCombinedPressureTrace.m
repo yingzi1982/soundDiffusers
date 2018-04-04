@@ -38,14 +38,13 @@ resample_rate = 10;
 [receiver_polar] = load([backup_folder 'receiver_polar']);
 theta = rad2deg(pi/2 - receiver_polar(:,1));
 
-combinedPressureTrace = zeros(nt,stationNumber);
+combinedPressureTrace = zeros(ceil(nt/resample_rate),stationNumber);
 for nStation = 1:stationNumber
   trace = load([OUTPUT_FILES_folder c{1,2}{nStation} '.' c{1,1}{nStation} '.' band '.' variable]);
-  combinedPressureTrace(:,nStation) = trace(:,2);
+  combinedPressureTrace(:,nStation) = trace(1:resample_rate:end,2);
 end
 t = trace(:,1) - trace(1,1);
 t = t(1:resample_rate:end,:);
-combinedPressureTrace = combinedPressureTrace(1:resample_rate:end,:);
 
 if strcmp(topoType,'none')
   trace_normalization =  max(abs(combinedPressureTrace(:)));

@@ -87,17 +87,17 @@ color=#0000FF
 awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Wthick,$color,-- -N -O -K >> $ps
 awk '{print $1, $2}' $originalxy | gmt psxy -J -R -St0.1i -N -G$color -W -O -K >> $ps
 #-------------------------------------
-#topoType=exponential
-#originalxy=../running/$topoType\_$sourceIncidentAngle/backup/$name
-#color=#4B0082 
-#awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Wthick,$color,-- -N -O -K >> $ps
-#awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Sn0.1i -N -G$color -W -O -K >> $ps
+topoType=exponential
+originalxy=../running/$topoType\_$sourceIncidentAngle/backup/$name
+color=#4B0082 
+awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Wthick,$color,-- -N -O -K >> $ps
+awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Sn0.1i -N -G$color -W -O -K >> $ps
 #-------------------------------------
-#topoType=vonkarman
-#originalxy=../running/$topoType\_$sourceIncidentAngle/backup/$name
-#color=#9400D3 
-#awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Wthick,$color,-- -N -O -K >> $ps
-#awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Ss0.1i -N -G$color -W -O -K >> $ps
+topoType=vonkarman
+originalxy=../running/$topoType\_$sourceIncidentAngle/backup/$name
+color=#9400D3 
+awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Wthick,$color,-- -N -O -K >> $ps
+awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Ss0.1i -N -G$color -W -O -K >> $ps
 
 region=0/1/0/1
 projection=X0.5i/1.8i
@@ -110,8 +110,8 @@ S 0i c 0.1i #FF7F00 0.25p 0.1i triangle
 S 0i d 0.1i #FFFF00 0.25p 0.1i rectangle
 S 0i h 0.1i #00FF00 0.25p 0.1i skyline
 S 0i t 0.1i #0000FF 0.25p 0.1i gaussian
-#S 0i n 0.1i #4B0082 0.25p 0.1i exponential
-#S 0i s 0.1i #9400D3 0.25p 0.1i vonKarman
+S 0i n 0.1i #4B0082 0.25p 0.1i exponential
+S 0i s 0.1i #9400D3 0.25p 0.1i vonKarman
 END
 
 

@@ -45,7 +45,7 @@ ymax=5
 width=1.3
 height=`echo "$width*(($ymax)-($ymin))/(($xmax)-($xmin))" | bc -l`
 projection=X$width\i/$height\i
-offset=`echo "$width*(1.2/(($xmax)-($xmin)))" | bc -l`
+offset=`echo "$width*(1.3/(($xmax)-($xmin)))" | bc -l`
 
 region=$xmin/$xmax/$ymin/$ymax
 

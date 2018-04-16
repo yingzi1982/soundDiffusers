@@ -45,7 +45,7 @@ ymax=5
 width=1.3
 height=`echo "$width*(($ymax)-($ymin))/(($xmax)-($xmin))" | bc -l`
 projection=X$width\i/$height\i
-offset=`echo "$width*(1/(($xmax)-($xmin)))" | bc -l`
+offset=`echo "$width*(1.2/(($xmax)-($xmin)))" | bc -l`
 
 region=$xmin/$xmax/$ymin/$ymax
 
@@ -81,7 +81,7 @@ backupfolder=../running/$runningName/backup/
 topo_polygon=$backupfolder\topoPolygon
 cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -Y$offset -O -K>> $ps #-L+yt -Ggray 
 
-runningName=sin_0
+runningName=sine_0
 backupfolder=../running/$runningName/backup/
 topo_polygon=$backupfolder\topoPolygon
 cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -Y$offset -O -K>> $ps #-L+yt -Ggray 

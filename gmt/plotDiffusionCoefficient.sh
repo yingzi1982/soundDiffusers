@@ -59,8 +59,7 @@ fi
 #-------------------------------------
 topoType=sine
 originalxy=../running/$topoType\_$sourceIncidentAngle/backup/$name
-#color=#FF0000
-color=red
+color=#FF0000
 awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Wthick,$color,-- -N -O -K >> $ps
 awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Sa0.1i -N -G$color -W -O -K >> $ps
 #-------------------------------------

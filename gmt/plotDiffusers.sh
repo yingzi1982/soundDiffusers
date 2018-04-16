@@ -89,7 +89,7 @@ cat $topo_polygon | gmt psxy -R -J -Ggray -W0.5p -Y$offset -O -K>> $ps #-L+yt -G
 runningName=flat_0
 backupfolder=../running/$runningName/backup/
 topo_polygon=$backupfolder\topoPolygon
-cat $topo_polygon | gmt psxy -R -J -Ggray -W0.5p -Y$offset -O >> $ps #-L+yt -Ggray 
+cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -Y$offset -O >> $ps #-L+yt -Ggray 
 
 gmt ps2raster -A -Te $ps -D$figfolder
 epstopdf --outfile=$pdf $eps

@@ -45,6 +45,7 @@ ymax=5
 width=0.8
 height=`echo "$width*(($ymax)-($ymin))/(($xmax)-($xmin))" | bc -l`
 projection=X$width\i/$height\i
+offset=`echo "$width*(0.5/(($xmax)-($xmin)))" | bc -l`
 
 region=$xmin/$xmax/$ymin/$ymax
 
@@ -53,7 +54,12 @@ gmt psbasemap -R$region -J$projection --MAP_FRAME_AXES='' -Ba1 -K > $ps
 runningName=flat_0
 backupfolder=../running/$runningName/backup/
 topo_polygon=$backupfolder\topoPolygon
-cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -O >> $ps #-L+yt -Ggray 
+cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -O -K >> $ps #-L+yt -Ggray 
+
+runningName=sine_0
+backupfolder=../running/$runningName/backup/
+topo_polygon=$backupfolder\topoPolygon
+cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -Y$offset -O >> $ps #-L+yt -Ggray 
 
 gmt ps2raster -A -Te $ps -D$figfolder
 epstopdf --outfile=$pdf $eps

@@ -54,42 +54,42 @@ gmt psbasemap -R$region -J$projection --MAP_FRAME_AXES='' -Ba1 -K > $ps
 runningName=vonkarman_0
 backupfolder=../running/$runningName/backup/
 topo_polygon=$backupfolder\topoPolygon
-cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -O -K >> $ps #-L+yt -Ggray 
+cat $topo_polygon | gmt psxy -R -J -Ggray -W0.5p -O -K >> $ps #-L+yt -Ggray 
 
-runningName=exponential_0
-backupfolder=../running/$runningName/backup/
-topo_polygon=$backupfolder\topoPolygon
-cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -Y$offset -O -K>> $ps #-L+yt -Ggray 
+#runningName=exponential_0
+#backupfolder=../running/$runningName/backup/
+#topo_polygon=$backupfolder\topoPolygon
+#cat $topo_polygon | gmt psxy -R -J -Ggray -W0.5p -Y$offset -O -K>> $ps #-L+yt -Ggray 
 
-runningName=gaussian_0
-backupfolder=../running/$runningName/backup/
-topo_polygon=$backupfolder\topoPolygon
-cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -Y$offset -O -K>> $ps #-L+yt -Ggray 
+#runningName=gaussian_0
+#backupfolder=../running/$runningName/backup/
+#topo_polygon=$backupfolder\topoPolygon
+#cat $topo_polygon | gmt psxy -R -J -Ggray -W0.5p -Y$offset -O -K>> $ps #-L+yt -Ggray 
 
 runningName=skyline_0
 backupfolder=../running/$runningName/backup/
 topo_polygon=$backupfolder\topoPolygon
-cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -Y$offset -O -K>> $ps #-L+yt -Ggray 
+cat $topo_polygon | gmt psxy -R -J -Ggray -W0.5p -Y$offset -O -K>> $ps #-L+yt -Ggray 
 
 runningName=rectangle_0
 backupfolder=../running/$runningName/backup/
 topo_polygon=$backupfolder\topoPolygon
-cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -Y$offset -O -K>> $ps #-L+yt -Ggray 
+cat $topo_polygon | gmt psxy -R -J -Ggray -W0.5p -Y$offset -O -K>> $ps #-L+yt -Ggray 
 
 runningName=triangle_0
 backupfolder=../running/$runningName/backup/
 topo_polygon=$backupfolder\topoPolygon
-cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -Y$offset -O -K>> $ps #-L+yt -Ggray 
+cat $topo_polygon | gmt psxy -R -J -Ggray -W0.5p -Y$offset -O -K>> $ps #-L+yt -Ggray 
 
 runningName=sine_0
 backupfolder=../running/$runningName/backup/
 topo_polygon=$backupfolder\topoPolygon
-cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -Y$offset -O -K>> $ps #-L+yt -Ggray 
+cat $topo_polygon | gmt psxy -R -J -Ggray -W0.5p -Y$offset -O -K>> $ps #-L+yt -Ggray 
 
 runningName=flat_0
 backupfolder=../running/$runningName/backup/
 topo_polygon=$backupfolder\topoPolygon
-cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -Y$offset -O >> $ps #-L+yt -Ggray 
+cat $topo_polygon | gmt psxy -R -J -Ggray -W0.5p -Y$offset -O >> $ps #-L+yt -Ggray 
 
 gmt ps2raster -A -Te $ps -D$figfolder
 epstopdf --outfile=$pdf $eps

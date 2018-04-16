@@ -53,8 +53,8 @@ if [[ $name != diffusion_coefficient_normalized ]]; then
 topoType=flat
 originalxy=../running/$topoType\_$sourceIncidentAngle/backup/$name
 color=#808080
-awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Wthick,$color,-- -N -O -K >> $ps
-awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Ss0.1i -N -G$color -W -O -K >> $ps
+awk '{print $1, $2}' $originalxy | gmt psxy -J -R -W1p,$color -N -O -K >> $ps
+#awk '{print $1, $2}' $originalxy | gmt psxy -J -R -S- -N -G$color -W -O -K >> $ps
 fi
 #-------------------------------------
 topoType=sine
@@ -81,23 +81,23 @@ color=#00FF00
 awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Wthick,$color,-- -N -O -K >> $ps
 awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Sh0.1i -N -G$color -W -O -K >> $ps
 #-------------------------------------
-#topoType=gaussian
-#originalxy=../running/$topoType\_$sourceIncidentAngle/backup/$name
-#color=#0000FF 
-#awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Wthick,$color,-- -N -O -K >> $ps
-#awk '{print $1, $2}' $originalxy | gmt psxy -J -R -St0.1i -N -G$color -W -O -K >> $ps
+topoType=gaussian
+originalxy=../running/$topoType\_$sourceIncidentAngle/backup/$name
+color=#0000FF 
+awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Wthick,$color,-- -N -O -K >> $ps
+awk '{print $1, $2}' $originalxy | gmt psxy -J -R -St0.1i -N -G$color -W -O -K >> $ps
 #-------------------------------------
-#topoType=exponential
-#originalxy=../running/$topoType\_$sourceIncidentAngle/backup/$name
-#color=#4B0082 
-#awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Wthick,$color,-- -N -O -K >> $ps
-#awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Sn0.1i -N -G$color -W -O -K >> $ps
+topoType=exponential
+originalxy=../running/$topoType\_$sourceIncidentAngle/backup/$name
+color=#4B0082 
+awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Wthick,$color,-- -N -O -K >> $ps
+awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Sn0.1i -N -G$color -W -O -K >> $ps
 #-------------------------------------
 topoType=vonkarman
 originalxy=../running/$topoType\_$sourceIncidentAngle/backup/$name
 color=#9400D3 
 awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Wthick,$color,-- -N -O -K >> $ps
-awk '{print $1, $2}' $originalxy | gmt psxy -J -R -St0.1i -N -G$color -W -O -K >> $ps
+awk '{print $1, $2}' $originalxy | gmt psxy -J -R -Ss0.1i -N -G$color -W -O -K >> $ps
 
 region=0/1/0/1
 projection=X0.5i/1.8i

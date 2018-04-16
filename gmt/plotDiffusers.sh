@@ -45,7 +45,7 @@ ymax=5
 width=0.8
 height=`echo "$width*(($ymax)-($ymin))/(($xmax)-($xmin))" | bc -l`
 projection=X$width\i/$height\i
-offset=`echo "$width*(0.5/(($xmax)-($xmin)))" | bc -l`
+offset=`echo "$width*(0.8/(($xmax)-($xmin)))" | bc -l`
 
 region=$xmin/$xmax/$ymin/$ymax
 
@@ -57,6 +57,36 @@ topo_polygon=$backupfolder\topoPolygon
 cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -O -K >> $ps #-L+yt -Ggray 
 
 runningName=sine_0
+backupfolder=../running/$runningName/backup/
+topo_polygon=$backupfolder\topoPolygon
+cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -Y$offset -O -K>> $ps #-L+yt -Ggray 
+
+runningName=triangle_0
+backupfolder=../running/$runningName/backup/
+topo_polygon=$backupfolder\topoPolygon
+cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -Y$offset -O -K>> $ps #-L+yt -Ggray 
+
+runningName=rectangle_0
+backupfolder=../running/$runningName/backup/
+topo_polygon=$backupfolder\topoPolygon
+cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -Y$offset -O -K>> $ps #-L+yt -Ggray 
+
+runningName=skyline_0
+backupfolder=../running/$runningName/backup/
+topo_polygon=$backupfolder\topoPolygon
+cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -Y$offset -O -K>> $ps #-L+yt -Ggray 
+
+runningName=gaussian_0
+backupfolder=../running/$runningName/backup/
+topo_polygon=$backupfolder\topoPolygon
+cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -Y$offset -O -K>> $ps #-L+yt -Ggray 
+
+runningName=exponential_0
+backupfolder=../running/$runningName/backup/
+topo_polygon=$backupfolder\topoPolygon
+cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -Y$offset -O -K>> $ps #-L+yt -Ggray 
+
+runningName=vonkarman_0
 backupfolder=../running/$runningName/backup/
 topo_polygon=$backupfolder\topoPolygon
 cat $topo_polygon | gmt psxy -R -J -Gred -W0.5p -Y$offset -O >> $ps #-L+yt -Ggray 

@@ -1,4 +1,4 @@
-# soundDiffusers
+# soundDiffusion
 
 This repo estimates the scattering polar responses and diffusion coefficients of the different diffusers, following the measurement deployment and procedures recommended by AES-4id-2001.
 
